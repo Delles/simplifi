@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { WalletConnectLoginContainer } from "@multiversx/sdk-dapp/UI";
 import { useWebWalletLogin } from "@multiversx/sdk-dapp/hooks/login/useWebWalletLogin";
 import { useExtensionLogin } from "@multiversx/sdk-dapp/hooks/login/useExtensionLogin";
-import { useLedgerLogin } from "@multiversx/sdk-dapp/hooks/login/useLedgerLogin";
 
 interface ConnectOptionsModalProps {
     isOpen: boolean;
@@ -21,7 +20,6 @@ export const ConnectOptionsModal: React.FC<ConnectOptionsModalProps> = ({
     // Hooks for login
     const [webWalletLogin] = useWebWalletLogin({ callbackRoute });
     const [extensionLogin] = useExtensionLogin({ callbackRoute });
-    const [ledgerLogin] = useLedgerLogin({ callbackRoute });
 
     if (!isOpen) return null;
 
@@ -65,14 +63,6 @@ export const ConnectOptionsModal: React.FC<ConnectOptionsModalProps> = ({
                         className={primaryChoiceButtonStyles}
                     >
                         Browser Extension
-                    </button>
-                </div>
-                <div className="w-full">
-                    <button
-                        onClick={ledgerLogin}
-                        className={primaryChoiceButtonStyles}
-                    >
-                        Ledger
                     </button>
                 </div>
             </div>
