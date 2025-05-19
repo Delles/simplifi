@@ -35,14 +35,15 @@ const WizardContainer = styled.div`
     margin: 0 auto;
     padding: 2rem;
     background-color: #f7f9fc; /* Cloud White - Theme: App Canvas/Page Background */
+    font-family: "Inter", sans-serif; /* Theme: Font Family */
 `;
 
 const StepContainer = styled.div`
-    background: #ffffff;
-    border-radius: 12px;
+    background: #ffffff; /* Pure White - Theme: Content Surface Background */
+    border-radius: 12px; /* Theme: 8px-12px for Cards/Modals */
     padding: 2rem;
     box-shadow: 0px 4px 8px rgba(25, 39, 55, 0.07),
-        0px 2px 4px rgba(25, 39, 55, 0.05);
+        0px 2px 4px rgba(25, 39, 55, 0.05); /* Theme: Level 2 Shadow */
 `;
 
 const FormGroup = styled.div`
@@ -51,20 +52,30 @@ const FormGroup = styled.div`
 
 const Label = styled.label`
     display: block;
-    font-size: 0.875rem; /* 14px */
-    font-weight: 500; /* Medium */
+    font-family: "Inter", sans-serif; /* Theme: Font Family */
+    font-size: 14px; /* Theme: Input Labels */
+    font-weight: 500; /* Theme: Input Labels (Medium) */
     color: #6b7280; /* Slate - Theme: Input Labels color */
     margin-bottom: 0.5rem;
 `;
 
 const Input = styled.input`
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.75rem; /* ~12px */
     border: 1px solid #e5e7eb; /* Ash - Theme: Standard Borders */
-    border-radius: 6px; /* Theme: 6px-8px */
-    font-size: 1rem; /* 16px - Theme: Input Field Text */
-    color: #1f2937; /* Graphite - Theme: Text Color */
+    border-radius: 8px; /* Theme: 6px-8px for UI Elements */
+    font-family: "Inter", sans-serif; /* Theme: Font Family */
+    font-size: 16px; /* Theme: Input Field Text */
+    font-weight: 400; /* Regular */
+    color: #1f2937; /* Graphite - Theme: Text Color (Primary) */
+    background-color: #ffffff; /* Pure White - Theme: Content Surface Background */
     transition: all 0.2s ease;
+    box-sizing: border-box; /* Ensure padding and border don't increase width */
+
+    &::placeholder {
+        color: #9ca3af; /* Silver/Slate with opacity - Theme: Placeholder Text Color */
+        font-weight: 400; /* Regular */
+    }
 
     &:focus {
         outline: none;
@@ -74,7 +85,9 @@ const Input = styled.input`
 
     &:disabled {
         background: #e5e7eb; /* Ash - Theme: Disabled Background */
+        color: #6b7280; /* Slate - Theme: Disabled Text */
         cursor: not-allowed;
+        border-color: #e5e7eb; /* Ensure border also reflects disabled state */
     }
 `;
 
@@ -86,42 +99,58 @@ const ButtonGroup = styled.div`
 
 const Button = styled.button<StyledProps>`
     padding: 0.75rem 1.5rem; /* ~12px 24px */
-    border-radius: 6px;
-    font-weight: 500; /* Medium */
+    border-radius: 8px; /* Theme: 6px-8px for UI Elements */
+    font-family: "Inter", sans-serif; /* Theme: Font Family */
     cursor: pointer;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 
     ${(props: StyledProps) =>
         props.variant === "primary"
             ? `
-    background: #00F2C3; /* Cyber Teal */
-    color: #0D2B2B; /* Deep Teal/Black */
+    background: #00F2C3; /* Cyber Teal - Theme: Primary Accent */
+    color: #0D2B2B; /* Deep Teal/Black - Theme: Text On Primary Accent */
     border: none;
-    font-size: 1rem; /* 16px - Theme: Primary/Large Buttons */
+    font-size: 16px; /* Theme: Primary/Large Buttons */
+    font-weight: 500; /* Medium */
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: #00D9B0; /* Darker Teal */
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle hover shadow */
+    }
+
+    &:focus:not(:disabled) {
+      outline: 2px solid #00F2C3; /* Cyber Teal */
+      outline-offset: 2px;
     }
 
     &:disabled {
-      background: #E5E7EB; /* Ash */
-      color: #6B7280; /* Slate */
+      background: #E5E7EB; /* Ash - Theme: Disabled Background */
+      color: #6B7280; /* Slate - Theme: Disabled Text */
       cursor: not-allowed;
     }
   `
             : `
     background: #FFFFFF; /* Pure White */
-    color: #3B82F6; /* Hyperlink Blue */
+    color: #3B82F6; /* Hyperlink Blue - Theme: Secondary Accent */
     border: 1px solid #3B82F6; /* Hyperlink Blue */
-    font-size: 0.875rem; /* 14px - Theme: Secondary/Small Buttons */
+    font-size: 14px; /* Theme: Secondary/Small Buttons */
+    font-weight: 500; /* Medium */
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: rgba(59, 130, 246, 0.1); /* Hyperlink Blue 10% opacity */
+      border-color: #3B82F6; /* Ensure border remains */
+    }
+    
+    &:focus:not(:disabled) {
+      outline: 2px solid #3B82F6; /* Hyperlink Blue */
+      outline-offset: 2px;
     }
 
     &:disabled {
       border-color: #E5E7EB; /* Ash */
       color: #6B7280; /* Slate */
+      background: #FFFFFF;
       cursor: not-allowed;
     }
   `}
@@ -131,7 +160,8 @@ const SummaryItem = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 0.75rem 0;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb; /* Ash - Theme: Standard Borders */
+    font-family: "Inter", sans-serif; /* Theme: Font Family */
 
     &:last-child {
         border-bottom: none;
@@ -139,66 +169,92 @@ const SummaryItem = styled.div`
 `;
 
 const SummaryLabel = styled.div`
-    color: #6b7280;
-    font-size: 0.875rem;
+    color: #6b7280; /* Slate - Theme: Text - Secondary */
+    font-size: 14px; /* Theme: p (Secondary/Small) */
+    font-weight: 400; /* Regular */
 `;
 
 const SummaryValue = styled.div`
-    color: #1f2937; /* Graphite */
-    font-weight: 400; /* Regular - To match theme for p (Secondary/Small) if paired with 14px label */
-    font-size: 0.875rem; /* 14px */
+    color: #1f2937; /* Graphite - Theme: Text - Primary */
+    font-weight: 400; /* Regular */
+    font-size: 14px; /* Theme: p (Secondary/Small) */
 `;
 
 const WarningBox = styled.div`
-    background: #f59e0b; /* Amber - Theme: Warning Background */
+    background: #fffbeb; /* Amber-50, lighter for better text contrast if needed */
     border: 1px solid #f59e0b; /* Amber - Theme: Warning Border */
-    border-radius: 6px;
+    border-left: 4px solid #f59e0b; /* Accent border for emphasis */
+    border-radius: 8px; /* Theme: 6px-8px for UI Elements */
     padding: 1rem;
     margin: 1rem 0;
-    color: #1f2937; /* Graphite - Theme: Warning Text */
-    font-size: 0.875rem; /* 14px */
+    color: #b45309; /* Darker Amber for text, ensuring good contrast */
+    font-family: "Inter", sans-serif; /* Theme: Font Family */
+    font-size: 14px; /* Theme: p (Secondary/Small) */
+
+    /* If using Graphite text as per original: */
+    /* color: #1f2937; */ /* Graphite - Theme: Warning Text */
+    /* background: #FDE68A; */ /* A light amber if Graphite text is used */
 `;
 
 const CheckboxLabel = styled.label`
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin: 1rem 0;
+    gap: 0.75rem; /* Increased gap slightly */
+    margin: 1.5rem 0; /* Increased margin */
     cursor: pointer;
     user-select: none; // Prevent text selection on click
-`;
-
-// New styled component for the custom checkbox
-const CustomCheckbox = styled.div<{ checked: boolean; disabled?: boolean }>`
-    min-width: 18px;
-    width: 18px;
-    height: 18px;
-    border: 2px solid
-        ${(props) =>
-            props.disabled ? "#E5E7EB" : props.checked ? "#00F2C3" : "#E5E7EB"};
-    background-color: ${(props) => (props.checked ? "#00F2C3" : "#FFFFFF")};
-    border-radius: 4px; // Slightly less rounded than radio for distinction, or use 6px as per theme elements
-    margin-right: 0.75rem;
-    display: inline-flex; // Changed from inline-block to use align-items
-    align-items: center; // For checkmark centering
-    justify-content: center; // For checkmark centering
-    transition: all 0.2s ease;
-    opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-
-    // Checkmark (using a pseudo-element)
-    &::after {
-        content: "✓"; // Checkmark character
-        font-size: 12px;
-        color: ${(props) =>
-            props.disabled
-                ? "#6B7280"
-                : "#0D2B2B"}; // Slate for disabled, Deep Teal/Black for enabled
-        display: ${(props) => (props.checked ? "block" : "none")};
-    }
+    font-family: "Inter", sans-serif; /* Theme: Font Family */
+    font-size: 14px; /* Theme: p (Secondary/Small) */
+    color: #1f2937; /* Graphite - Theme: Text - Primary */
 `;
 
 const NativeCheckbox = styled.input.attrs({ type: "checkbox" })`
     display: none; // Hide native checkbox
+`;
+
+// New styled component for the custom checkbox
+const CustomCheckbox = styled.div<{ checked: boolean; disabled?: boolean }>`
+    min-width: 20px; /* Increased size slightly */
+    width: 20px;
+    height: 20px;
+    border: 2px solid
+        ${(props) =>
+            props.disabled
+                ? "#E5E7EB" /* Ash - Theme: Disabled Background/Border */
+                : props.checked
+                ? "#00F2C3" /* Cyber Teal - Theme: Primary Accent */
+                : "#adb5bd"}; /* Mid-gray for unchecked state, better than Ash for visibility */
+    background-color: ${(props) =>
+        props.checked
+            ? "#00F2C3" /* Cyber Teal - Theme: Primary Accent */
+            : "#FFFFFF"}; /* Pure White */
+    border-radius: 6px; /* Theme: 6px-8px, using 6px for a slightly more checkbox feel */
+    /* margin-right: 0.75rem; */ /* Gap is now handled by CheckboxLabel */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    opacity: ${(props) =>
+        props.disabled ? 0.6 : 1}; /* Adjusted opacity for disabled */
+    flex-shrink: 0; /* Prevent shrinking in flex layout */
+
+    // Checkmark (using a pseudo-element)
+    &::after {
+        content: "✓"; // Checkmark character
+        font-size: 14px; /* Adjusted for new checkbox size */
+        font-weight: bold; /* Make checkmark clearer */
+        color: ${(props) =>
+            props.disabled
+                ? "#6B7280" /* Slate - Theme: Disabled Text */
+                : "#0D2B2B"}; /* Deep Teal/Black - Theme: Text on Primary Accent */
+        display: ${(props) => (props.checked ? "block" : "none")};
+    }
+
+    /* Focus state for accessibility */
+    input[type="checkbox"]:focus + & {
+        outline: 2px solid #3b82f6; /* Hyperlink Blue */
+        outline-offset: 2px;
+    }
 `;
 
 const steps = [
@@ -240,6 +296,7 @@ export const TokenCreationWizard: React.FC = () => {
     });
     const [confirmed, setConfirmed] = useState(false);
     const [isDeploying, setIsDeploying] = useState(false);
+    const [deploymentSuccessful, setDeploymentSuccessful] = useState(false);
 
     const handleInputChange = (
         field: keyof TokenData,
@@ -262,11 +319,12 @@ export const TokenCreationWizard: React.FC = () => {
 
     const handleDeploy = () => {
         setIsDeploying(true);
+        setDeploymentSuccessful(false);
         // Simulate deployment
         setTimeout(() => {
             setIsDeploying(false);
-            // Here you would typically handle the actual deployment
-            alert("Token deployment simulated successfully!");
+            setDeploymentSuccessful(true);
+            // alert("Token deployment simulated successfully!");
         }, 2000);
     };
 
@@ -503,21 +561,107 @@ export const TokenCreationWizard: React.FC = () => {
         </>
     );
 
-    const renderStep4 = () => (
-        <>
-            {isDeploying ? (
-                <div>Deploying your token...</div>
-            ) : (
-                <Button
-                    variant="primary"
-                    onClick={handleDeploy}
-                    disabled={!confirmed}
-                >
-                    Deploy Token
-                </Button>
-            )}
-        </>
-    );
+    const renderStep4 = () => {
+        if (deploymentSuccessful) {
+            return (
+                <div style={{ fontFamily: "'Inter', sans-serif" }}>
+                    <h4
+                        style={{
+                            fontSize: "20px",
+                            fontWeight: 600,
+                            color: "#1F2937",
+                            marginBottom: "0.5rem",
+                        }}
+                    >
+                        {" "}
+                        {/* h3 per theme */}
+                        Transaction Submitted (Simulated)
+                    </h4>
+                    <p
+                        style={{
+                            fontSize: "16px",
+                            color: "#1F2937",
+                            lineHeight: "1.6",
+                            marginBottom: "0.5rem",
+                        }}
+                    >
+                        Your token has been successfully created on the test
+                        network (simulation).
+                    </p>
+                    <p
+                        style={{
+                            fontSize: "16px",
+                            color: "#1F2937",
+                            lineHeight: "1.6",
+                            marginBottom: "1rem",
+                        }}
+                    >
+                        Transaction ID (Simulated):{" "}
+                        <a
+                            href="#"
+                            onClick={(e) => e.preventDefault()}
+                            style={{
+                                color: "#3B82F6",
+                                textDecoration: "underline",
+                            }}
+                        >
+                            0x123abc456def789ghi (View on Explorer - Simulated)
+                        </a>
+                    </p>
+                    <p
+                        style={{
+                            fontSize: "16px",
+                            fontWeight: 500,
+                            color: "#1F2937",
+                            marginBottom: "1rem",
+                        }}
+                    >
+                        What's next?
+                    </p>
+                    <ButtonGroup>
+                        <Button
+                            onClick={() => {
+                                /* Logic to navigate to My Tokens or similar */ alert(
+                                    "Navigate to My Tokens (Placeholder)"
+                                );
+                            }}
+                            variant="secondary"
+                        >
+                            View My Tokens
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setCurrentStep(0);
+                                setConfirmed(false);
+                                setDeploymentSuccessful(
+                                    false
+                                ); /* Reset relevant state for new token */
+                            }}
+                            variant="primary"
+                        >
+                            Create Another Token
+                        </Button>
+                    </ButtonGroup>
+                </div>
+            );
+        }
+
+        return (
+            <>
+                {isDeploying ? (
+                    <div>Deploying your token... Please wait.</div>
+                ) : (
+                    <Button
+                        variant="primary"
+                        onClick={handleDeploy}
+                        disabled={!confirmed || isDeploying}
+                    >
+                        {isDeploying ? "Deploying..." : "Deploy Token"}
+                    </Button>
+                )}
+            </>
+        );
+    };
 
     const renderCurrentStep = () => {
         switch (currentStep) {
