@@ -5,11 +5,11 @@ import Sidebar from "../components/Sidebar";
 
 export default function MainLayout() {
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-cloud-white">
             <Header />
             <div className="flex flex-1">
                 <Sidebar />
-                <main className="flex-1 p-4">
+                <main className="flex-1">
                     <Outlet />
                 </main>
             </div>

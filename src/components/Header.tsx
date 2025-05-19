@@ -1,17 +1,14 @@
+import { useState } from "react";
 import {
     useGetLoginInfo,
     useGetAccountInfo,
     useGetNetworkConfig,
 } from "@multiversx/sdk-dapp/hooks";
-import {
-    ExtensionLoginButton,
-    WalletConnectLoginButton,
-    LedgerLoginButton,
-    WebWalletLoginButton,
-} from "@multiversx/sdk-dapp/UI";
 import { logout } from "@multiversx/sdk-dapp/utils";
 import { formatAmount } from "@multiversx/sdk-dapp/utils/operations/formatAmount";
 import { Link } from "react-router-dom";
+import Button from "./shared/Button";
+import { ConnectOptionsModal } from "./modals/ConnectOptionsModal";
 
 const DECIMALS = 18; // Standard EGLD decimals
 const DIGITS = 4; // Number of decimals to display for balance
@@ -20,15 +17,19 @@ export default function Header() {
     const { isLoggedIn } = useGetLoginInfo();
     const { address, account } = useGetAccountInfo();
     const { network } = useGetNetworkConfig();
+    const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
 
     // Wait for network and account data to be available
     if (!network || !account) {
         // You could return a loading state or a simplified header here
         // For now, returning null or a minimal header to avoid errors
         return (
-            <header className="bg-white shadow-md p-4 flex justify-between items-center">
-                <Link to="/" className="text-xl font-bold text-blue-600">
-                    SimplifiDApp
+            <header className="bg-pure-white shadow-level-1 p-6 flex justify-between items-center sticky top-0 z-40 border-b border-ash">
+                <Link
+                    to="/"
+                    className="text-h2 font-semibold text-slate hover:text-cyber-teal transition-colors duration-200"
+                >
+                    SimpliFi
                 </Link>
                 <div>Loading...</div>
             </header>
@@ -65,55 +66,60 @@ export default function Header() {
           )}`
         : "N/A";
 
+    const openConnectModal = () => setIsConnectModalOpen(true);
+    const closeConnectModal = () => setIsConnectModalOpen(false);
+
     return (
-        <header className="bg-white shadow-md p-4 flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-                <Link to="/" className="text-xl font-bold text-blue-600">
-                    SimplifiDApp
+        <header className="bg-pure-white shadow-level-1 p-6 flex justify-between items-center sticky top-0 z-40 border-b border-ash">
+            <div className="flex items-center space-x-6">
+                <Link
+                    to={isLoggedIn ? "/app" : "/"}
+                    className="text-h2 font-semibold text-slate hover:text-cyber-teal transition-colors duration-200"
+                >
+                    SimpliFi
                 </Link>
                 {/* Network should exist due to the check above */}
-                <span className="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">
+                <span className="px-3 py-1 text-xs font-bold text-pure-white bg-hyperlink-blue rounded-full shadow-sm">
                     {network.name} ({network.chainID})
                 </span>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
                 {!isLoggedIn ? (
-                    <>
-                        <WebWalletLoginButton
-                            callbackRoute="/app"
-                            loginButtonText="Web Wallet"
-                        />
-                        <ExtensionLoginButton
-                            callbackRoute="/app"
-                            loginButtonText="Extension"
-                        />
-                        <WalletConnectLoginButton
-                            callbackRoute="/app"
-                            loginButtonText="xPortal App"
-                        />
-                        <LedgerLoginButton
-                            callbackRoute="/app"
-                            loginButtonText="Ledger"
-                        />
-                    </>
+                    <Button
+                        onClick={openConnectModal}
+                        // className will be handled by Button.tsx styling
+                    >
+                        Connect Wallet
+                    </Button>
                 ) : (
-                    <div className="flex items-center space-x-3">
-                        <div className="text-sm">
-                            <p className="font-medium">{displayAddress}</p>
-                            <p className="text-gray-600">
+                    <div className="flex items-center space-x-4">
+                        <div className="text-sm text-right">
+                            <p
+                                className="font-semibold text-graphite truncate max-w-[150px]"
+                                title={address}
+                            >
+                                {displayAddress}
+                            </p>
+                            <p className="text-slate text-sm mt-1">
                                 {formattedBalance} {egldLabel}
                             </p>
                         </div>
-                        <button
+                        <Button
                             onClick={handleLogout}
-                            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded text-sm"
+                            variant="destructive"
+                            // className will be handled by Button.tsx styling
                         >
                             Disconnect
-                        </button>
+                        </Button>
                     </div>
                 )}
             </div>
+            <ConnectOptionsModal
+                isOpen={isConnectModalOpen}
+                onClose={closeConnectModal}
+                callbackRoute="/app"
+            />
         </header>
     );
 }

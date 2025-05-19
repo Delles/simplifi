@@ -6,9 +6,9 @@ import Footer from "../components/Footer";
 
 export default function LandingLayout() {
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-cloud-white">
             <Header />
-            <main className="flex-1 p-4">
+            <main className="flex-1">
                 <Outlet />
             </main>
             <Footer />
