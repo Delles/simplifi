@@ -28,7 +28,7 @@ export default function Dashboard() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <Link
-                        to="/create-token"
+                        to="/app/create-token"
                         className="bg-pure-white p-6 rounded-card shadow-level-1 hover:shadow-level-2 transition-all duration-200 hover:-translate-y-0.5"
                     >
                         <h3 className="text-h3 font-semibold text-graphite mb-2">
@@ -39,7 +39,7 @@ export default function Dashboard() {
                         </p>
                     </Link>
                     <Link
-                        to="/my-tokens"
+                        to="/app/my-tokens"
                         className="bg-pure-white p-6 rounded-card shadow-level-1 hover:shadow-level-2 transition-all duration-200 hover:-translate-y-0.5"
                     >
                         <h3 className="text-h3 font-semibold text-graphite mb-2">

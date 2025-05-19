@@ -8,6 +8,7 @@ import LandingPage from "./pages/LandingPage/LandingPage"; // Add LandingPage im
 import About from "./pages/About"; // Assuming these exist or will be created
 import Dashboard from "./pages/Dashboard"; // Assuming these exist or will be created
 import SettingsPagePlaceholder from "./pages/SettingsPagePlaceholder"; // Assuming these exist or will be created
+import { TokenCreationWizard } from "./pages/TokenCreationWizard";
 import { AuthGuard } from "./components/AuthGuard"; // Import AuthGuard
 import { GuestGuard } from "./components/GuestGuard"; // Import GuestGuard
 
@@ -50,6 +51,10 @@ export default function App() {
                     <Route
                         path="settings"
                         element={<SettingsPagePlaceholder />}
+                    />
+                    <Route
+                        path="create-token"
+                        element={<TokenCreationWizard />}
                     />
                     {/* other authenticated routes */}
                 </Route>

@@ -19,6 +19,7 @@ module.exports = {
         'emerald-green': '#10B981',
         'amber': '#F59E0B',
         'signal-red': '#EF4444',
+        'silver': '#9CA3AF',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

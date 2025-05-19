@@ -13,6 +13,12 @@ export default function Sidebar() {
                 Dashboard
             </Link>
             <Link
+                to="/app/create-token"
+                className="block text-slate hover:text-cyber-teal py-2 px-3 rounded-ui-element"
+            >
+                Create Token
+            </Link>
+            <Link
                 to="/app/settings"
                 className="block text-slate hover:text-cyber-teal py-2 px-3 rounded-ui-element"
             >
