@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import TokenSummaryCard from "../components/shared/TokenSummaryCard";
+import TokenSummaryCard from "../../components/shared/TokenSummaryCard";
 
 // Mock data for tokens
 const mockTokens = [
@@ -61,7 +61,7 @@ export default function Dashboard() {
                         </p>
                     </Link>
                     <Link
-                        to="/liquidity"
+                        to="/app/add-liquidity"
                         className="bg-pure-white p-6 rounded-card shadow-level-1 hover:shadow-level-2 transition-all duration-200 hover:-translate-y-0.5"
                     >
                         <h3 className="text-h3 font-semibold text-graphite mb-2">

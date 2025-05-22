@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Stepper } from "../components/Stepper";
-import { InfoIconWithTooltip } from "../components/InfoIconWithTooltip";
-import { CollapsibleSection } from "../components/CollapsibleSection";
-import { ToggleSwitch } from "../components/ToggleSwitch";
-import { RadioButtonGroup } from "../components/RadioButtonGroup";
+import { Stepper } from "../../components/Stepper";
+import { InfoIconWithTooltip } from "../../components/InfoIconWithTooltip";
+import { CollapsibleSection } from "../../components/CollapsibleSection";
+import { ToggleSwitch } from "../../components/ToggleSwitch";
+import { RadioButtonGroup } from "../../components/RadioButtonGroup";
 
 interface TokenData {
     // Step 1: Basic Info

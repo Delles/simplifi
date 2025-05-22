@@ -24,6 +24,12 @@ export default function Sidebar() {
             >
                 Settings
             </Link>
+            <Link
+                to="/app/add-liquidity"
+                className="block text-slate hover:text-cyber-teal py-2 px-3 rounded-ui-element"
+            >
+                Add Liquidity
+            </Link>
         </aside>
     );
 }
