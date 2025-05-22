@@ -1,3 +1,7 @@
+//Landing Page will be modified to be a landing page for the app.
+//It will be used to showcase the features of the app and to get users to sign up.
+//It will also be used to get users to connect their wallet and to begin using the app.
+
 import React, { useState } from "react";
 import { ConnectOptionsModal } from "../../components/modals/ConnectOptionsModal";
 
