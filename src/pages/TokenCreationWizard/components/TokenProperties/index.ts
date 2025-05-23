@@ -1,0 +1,1 @@
+export { TokenProperties } from "./TokenProperties";

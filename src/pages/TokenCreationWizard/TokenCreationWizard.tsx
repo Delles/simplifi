@@ -1,302 +1,81 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Stepper } from "../../components/Stepper";
-import { InfoIconWithTooltip } from "../../components/InfoIconWithTooltip";
-import { CollapsibleSection } from "../../components/CollapsibleSection";
-import { ToggleSwitch } from "../../components/ToggleSwitch";
-import { RadioButtonGroup } from "../../components/RadioButtonGroup";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+    WizardStepper,
+    BasicInformation,
+    TokenProperties,
+    ReviewConfirm,
+    Deploy,
+    ResultsStep,
+    type TokenData,
+} from "./components";
 
-interface TokenData {
-    // Step 1: Basic Info
-    name: string;
-    ticker: string;
-    initialSupply: string;
-    decimals: string;
-
-    // Step 2: Properties
-    supplyType: "fixed" | "variable";
-    burnable: boolean;
-    ownershipTransfer: boolean;
-
-    // Advanced Properties
-    pausable: boolean;
-    freezable: boolean;
-    wipeable: boolean;
-    upgradable: boolean;
-    nftCreate: boolean;
-}
-
-interface StyledProps {
-    variant?: "primary" | "secondary";
-}
-
-const WizardContainer = styled.div`
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #f7f9fc; /* Cloud White - Theme: App Canvas/Page Background */
-    font-family: "Inter", sans-serif; /* Theme: Font Family */
-`;
-
-const StepContainer = styled.div`
-    background: #ffffff; /* Pure White - Theme: Content Surface Background */
-    border-radius: 12px; /* Theme: 8px-12px for Cards/Modals */
-    padding: 2rem;
-    box-shadow: 0px 4px 8px rgba(25, 39, 55, 0.07),
-        0px 2px 4px rgba(25, 39, 55, 0.05); /* Theme: Level 2 Shadow */
-`;
-
-const FormGroup = styled.div`
-    margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-    display: block;
-    font-family: "Inter", sans-serif; /* Theme: Font Family */
-    font-size: 14px; /* Theme: Input Labels */
-    font-weight: 500; /* Theme: Input Labels (Medium) */
-    color: #6b7280; /* Slate - Theme: Input Labels color */
-    margin-bottom: 0.5rem;
-`;
-
-const Input = styled.input`
-    width: 100%;
-    padding: 0.75rem; /* ~12px */
-    border: 1px solid #e5e7eb; /* Ash - Theme: Standard Borders */
-    border-radius: 8px; /* Theme: 6px-8px for UI Elements */
-    font-family: "Inter", sans-serif; /* Theme: Font Family */
-    font-size: 16px; /* Theme: Input Field Text */
-    font-weight: 400; /* Regular */
-    color: #1f2937; /* Graphite - Theme: Text Color (Primary) */
-    background-color: #ffffff; /* Pure White - Theme: Content Surface Background */
-    transition: all 0.2s ease;
-    box-sizing: border-box; /* Ensure padding and border don't increase width */
-
-    &::placeholder {
-        color: #9ca3af; /* Silver/Slate with opacity - Theme: Placeholder Text Color */
-        font-weight: 400; /* Regular */
-    }
-
-    &:focus {
-        outline: none;
-        border: 1.5px solid #3b82f6; /* Hyperlink Blue - Theme: Focus State Border */
-        box-shadow: inset 0px 1px 2px rgba(59, 130, 246, 0.2); /* Theme: Subtle inner shadow for focus */
-    }
-
-    &:disabled {
-        background: #e5e7eb; /* Ash - Theme: Disabled Background */
-        color: #6b7280; /* Slate - Theme: Disabled Text */
-        cursor: not-allowed;
-        border-color: #e5e7eb; /* Ensure border also reflects disabled state */
-    }
-`;
-
-const ButtonGroup = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-`;
-
-const Button = styled.button<StyledProps>`
-    padding: 0.75rem 1.5rem; /* ~12px 24px */
-    border-radius: 8px; /* Theme: 6px-8px for UI Elements */
-    font-family: "Inter", sans-serif; /* Theme: Font Family */
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-
-    ${(props: StyledProps) =>
-        props.variant === "primary"
-            ? `
-    background: #00F2C3; /* Cyber Teal - Theme: Primary Accent */
-    color: #0D2B2B; /* Deep Teal/Black - Theme: Text On Primary Accent */
-    border: none;
-    font-size: 16px; /* Theme: Primary/Large Buttons */
-    font-weight: 500; /* Medium */
-
-    &:hover:not(:disabled) {
-      background: #00D9B0; /* Darker Teal */
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle hover shadow */
-    }
-
-    &:focus:not(:disabled) {
-      outline: 2px solid #00F2C3; /* Cyber Teal */
-      outline-offset: 2px;
-    }
-
-    &:disabled {
-      background: #E5E7EB; /* Ash - Theme: Disabled Background */
-      color: #6B7280; /* Slate - Theme: Disabled Text */
-      cursor: not-allowed;
-    }
-  `
-            : `
-    background: #FFFFFF; /* Pure White */
-    color: #3B82F6; /* Hyperlink Blue - Theme: Secondary Accent */
-    border: 1px solid #3B82F6; /* Hyperlink Blue */
-    font-size: 14px; /* Theme: Secondary/Small Buttons */
-    font-weight: 500; /* Medium */
-
-    &:hover:not(:disabled) {
-      background: rgba(59, 130, 246, 0.1); /* Hyperlink Blue 10% opacity */
-      border-color: #3B82F6; /* Ensure border remains */
-    }
-    
-    &:focus:not(:disabled) {
-      outline: 2px solid #3B82F6; /* Hyperlink Blue */
-      outline-offset: 2px;
-    }
-
-    &:disabled {
-      border-color: #E5E7EB; /* Ash */
-      color: #6B7280; /* Slate */
-      background: #FFFFFF;
-      cursor: not-allowed;
-    }
-  `}
-`;
-
-const SummaryItem = styled.div`
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #e5e7eb; /* Ash - Theme: Standard Borders */
-    font-family: "Inter", sans-serif; /* Theme: Font Family */
-
-    &:last-child {
-        border-bottom: none;
-    }
-`;
-
-const SummaryLabel = styled.div`
-    color: #6b7280; /* Slate - Theme: Text - Secondary */
-    font-size: 14px; /* Theme: p (Secondary/Small) */
-    font-weight: 400; /* Regular */
-`;
-
-const SummaryValue = styled.div`
-    color: #1f2937; /* Graphite - Theme: Text - Primary */
-    font-weight: 400; /* Regular */
-    font-size: 14px; /* Theme: p (Secondary/Small) */
-`;
-
-const WarningBox = styled.div`
-    background: #fffbeb; /* Amber-50, lighter for better text contrast if needed */
-    border: 1px solid #f59e0b; /* Amber - Theme: Warning Border */
-    border-left: 4px solid #f59e0b; /* Accent border for emphasis */
-    border-radius: 8px; /* Theme: 6px-8px for UI Elements */
-    padding: 1rem;
-    margin: 1rem 0;
-    color: #b45309; /* Darker Amber for text, ensuring good contrast */
-    font-family: "Inter", sans-serif; /* Theme: Font Family */
-    font-size: 14px; /* Theme: p (Secondary/Small) */
-
-    /* If using Graphite text as per original: */
-    /* color: #1f2937; */ /* Graphite - Theme: Warning Text */
-    /* background: #FDE68A; */ /* A light amber if Graphite text is used */
-`;
-
-const CheckboxLabel = styled.label`
-    display: flex;
-    align-items: center;
-    gap: 0.75rem; /* Increased gap slightly */
-    margin: 1.5rem 0; /* Increased margin */
-    cursor: pointer;
-    user-select: none; // Prevent text selection on click
-    font-family: "Inter", sans-serif; /* Theme: Font Family */
-    font-size: 14px; /* Theme: p (Secondary/Small) */
-    color: #1f2937; /* Graphite - Theme: Text - Primary */
-`;
-
-const NativeCheckbox = styled.input.attrs({ type: "checkbox" })`
-    display: none; // Hide native checkbox
-`;
-
-// New styled component for the custom checkbox
-const CustomCheckbox = styled.div<{ checked: boolean; disabled?: boolean }>`
-    min-width: 20px; /* Increased size slightly */
-    width: 20px;
-    height: 20px;
-    border: 2px solid
-        ${(props) =>
-            props.disabled
-                ? "#E5E7EB" /* Ash - Theme: Disabled Background/Border */
-                : props.checked
-                ? "#00F2C3" /* Cyber Teal - Theme: Primary Accent */
-                : "#adb5bd"}; /* Mid-gray for unchecked state, better than Ash for visibility */
-    background-color: ${(props) =>
-        props.checked
-            ? "#00F2C3" /* Cyber Teal - Theme: Primary Accent */
-            : "#FFFFFF"}; /* Pure White */
-    border-radius: 6px; /* Theme: 6px-8px, using 6px for a slightly more checkbox feel */
-    /* margin-right: 0.75rem; */ /* Gap is now handled by CheckboxLabel */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    opacity: ${(props) =>
-        props.disabled ? 0.6 : 1}; /* Adjusted opacity for disabled */
-    flex-shrink: 0; /* Prevent shrinking in flex layout */
-
-    // Checkmark (using a pseudo-element)
-    &::after {
-        content: "✓"; // Checkmark character
-        font-size: 14px; /* Adjusted for new checkbox size */
-        font-weight: bold; /* Make checkmark clearer */
-        color: ${(props) =>
-            props.disabled
-                ? "#6B7280" /* Slate - Theme: Disabled Text */
-                : "#0D2B2B"}; /* Deep Teal/Black - Theme: Text on Primary Accent */
-        display: ${(props) => (props.checked ? "block" : "none")};
-    }
-
-    /* Focus state for accessibility */
-    input[type="checkbox"]:focus + & {
-        outline: 2px solid #3b82f6; /* Hyperlink Blue */
-        outline-offset: 2px;
-    }
-`;
-
-const steps = [
-    { title: "Basic Info", description: "Token name and supply" },
-    { title: "Properties", description: "Token features and settings" },
-    { title: "Review", description: "Confirm your choices" },
-    { title: "Deploy", description: "Create your token" },
-];
-
-const supplyTypeOptions = [
-    {
-        value: "fixed",
-        label: "Fixed Supply",
-        description:
-            "The total supply will remain constant. No new tokens can be minted.",
-    },
-    {
-        value: "variable",
-        label: "Variable Supply",
-        description: "You can mint additional tokens after creation if needed.",
-    },
-];
+// Cost estimation (PDR requirement: transparent cost breakdown)
+const EGLD_ISSUANCE_COST = 0.05;
 
 export const TokenCreationWizard: React.FC = () => {
-    const [currentStep, setCurrentStep] = useState(0);
+    const navigate = useNavigate();
+    const [currentStep, setCurrentStep] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [estimatedCost, setEstimatedCost] = useState(EGLD_ISSUANCE_COST);
+
+    // Results step state
+    const [deploymentResult, setDeploymentResult] = useState<{
+        isSuccess: boolean;
+        transactionHash?: string;
+        errorMessage?: string;
+    } | null>(null);
+
     const [tokenData, setTokenData] = useState<TokenData>({
         name: "",
         ticker: "",
         initialSupply: "",
         decimals: "18",
         supplyType: "fixed",
-        burnable: false,
-        ownershipTransfer: false,
+        burnable: true,
+        ownershipTransfer: true,
         pausable: false,
         freezable: false,
         wipeable: false,
         upgradable: false,
         nftCreate: false,
     });
-    const [confirmed, setConfirmed] = useState(false);
-    const [isDeploying, setIsDeploying] = useState(false);
-    const [deploymentSuccessful, setDeploymentSuccessful] = useState(false);
+
+    // Updated steps to include Results step
+    const steps = [
+        {
+            title: "Basic Info",
+            description: "Name & Supply",
+            educationalNote: "Define your token's identity",
+        },
+        {
+            title: "Properties",
+            description: "Token Rules",
+            educationalNote: "Configure token behavior",
+        },
+        {
+            title: "Review",
+            description: "Confirm Details",
+            educationalNote: "Verify before deployment",
+        },
+        {
+            title: "Deploy",
+            description: "Create Token",
+            educationalNote: "Launch on MultiversX",
+        },
+        {
+            title: "Results",
+            description: "Success!",
+            educationalNote: "Your token is ready",
+        },
+    ];
+
+    // Real-time cost estimation (PDR requirement)
+    useEffect(() => {
+        const cost = EGLD_ISSUANCE_COST;
+        // Additional costs could be calculated here based on token properties
+        setEstimatedCost(cost);
+    }, [tokenData]);
 
     const handleInputChange = (
         field: keyof TokenData,
@@ -305,414 +84,379 @@ export const TokenCreationWizard: React.FC = () => {
         setTokenData((prev) => ({ ...prev, [field]: value }));
     };
 
-    const handleNext = () => {
-        if (currentStep < steps.length - 1) {
+    const handleNext = async () => {
+        if (currentStep < 4) {
+            setIsLoading(true);
+            // Simulate validation/processing time for better UX
+            await new Promise((resolve) => setTimeout(resolve, 300));
             setCurrentStep((prev) => prev + 1);
+            setIsLoading(false);
         }
     };
 
     const handleBack = () => {
-        if (currentStep > 0) {
+        if (currentStep > 1) {
             setCurrentStep((prev) => prev - 1);
         }
     };
 
-    const handleDeploy = () => {
-        setIsDeploying(true);
-        setDeploymentSuccessful(false);
-        // Simulate deployment
-        setTimeout(() => {
-            setIsDeploying(false);
-            setDeploymentSuccessful(true);
-            // alert("Token deployment simulated successfully!");
-        }, 2000);
+    const handleDeploy = async () => {
+        setIsLoading(true);
+        try {
+            // TODO: Implement actual deployment logic with MultiversX SDK
+            console.log("Deploying token with data:", tokenData);
+            console.log("Estimated cost:", estimatedCost, "EGLD");
+
+            // Simulate deployment time
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            // Random success/failure for testing (as requested)
+            const isSuccess = Math.random() > 0.3; // 70% success rate for testing
+
+            if (isSuccess) {
+                // Generate a mock transaction hash for success
+                const mockTxHash = `0x${Math.random()
+                    .toString(16)
+                    .substring(2, 66)}`;
+                setDeploymentResult({
+                    isSuccess: true,
+                    transactionHash: mockTxHash,
+                });
+            } else {
+                // Generate random error message for failure
+                const errorMessages = [
+                    "Insufficient EGLD balance. Please ensure you have at least 0.05 EGLD.",
+                    "Network congestion detected. Please try again in a few minutes.",
+                    "Transaction timeout. The MultiversX network is experiencing high traffic.",
+                    "Invalid ticker symbol. This ticker may already be in use.",
+                ];
+                setDeploymentResult({
+                    isSuccess: false,
+                    errorMessage:
+                        errorMessages[
+                            Math.floor(Math.random() * errorMessages.length)
+                        ],
+                });
+            }
+
+            // Move to results step
+            setCurrentStep(5);
+        } catch (error) {
+            console.error("Deployment failed:", error);
+            setDeploymentResult({
+                isSuccess: false,
+                errorMessage: "An unexpected error occurred. Please try again.",
+            });
+            setCurrentStep(5);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const renderStep1 = () => (
-        <>
-            <FormGroup>
-                <Label>
-                    Token Name
-                    <InfoIconWithTooltip tooltipText="The full name of your token (e.g., 'My Awesome Token')" />
-                </Label>
-                <Input
-                    type="text"
-                    value={tokenData.name}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("name", e.target.value)
-                    }
-                    placeholder="Enter token name"
-                />
-            </FormGroup>
-
-            <FormGroup>
-                <Label>
-                    Token Ticker
-                    <InfoIconWithTooltip tooltipText="A short identifier for your token (3-10 characters)" />
-                </Label>
-                <Input
-                    type="text"
-                    value={tokenData.ticker}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange(
-                            "ticker",
-                            e.target.value.toUpperCase()
-                        )
-                    }
-                    placeholder="Enter token ticker"
-                    maxLength={10}
-                />
-            </FormGroup>
-
-            <FormGroup>
-                <Label>
-                    Initial Supply
-                    <InfoIconWithTooltip tooltipText="The initial amount of tokens to create" />
-                </Label>
-                <Input
-                    type="number"
-                    value={tokenData.initialSupply}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("initialSupply", e.target.value)
-                    }
-                    placeholder="Enter initial supply"
-                    min="0"
-                />
-            </FormGroup>
-
-            <FormGroup>
-                <Label>
-                    Decimals
-                    <InfoIconWithTooltip tooltipText="Number of decimal places (default: 18)" />
-                </Label>
-                <Input
-                    type="number"
-                    value={tokenData.decimals}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("decimals", e.target.value)
-                    }
-                    placeholder="Enter number of decimals"
-                    min="0"
-                    max="18"
-                />
-            </FormGroup>
-        </>
-    );
-
-    const renderStep2 = () => (
-        <>
-            <FormGroup>
-                <Label>Supply Type</Label>
-                <RadioButtonGroup
-                    options={supplyTypeOptions}
-                    value={tokenData.supplyType}
-                    onChange={(value) => handleInputChange("supplyType", value)}
-                    name="supplyType"
-                />
-            </FormGroup>
-
-            <FormGroup>
-                <ToggleSwitch
-                    label="Burnable"
-                    checked={tokenData.burnable}
-                    onChange={(value) => handleInputChange("burnable", value)}
-                />
-                <InfoIconWithTooltip tooltipText="Allow tokens to be burned (destroyed)" />
-            </FormGroup>
-
-            <FormGroup>
-                <ToggleSwitch
-                    label="Ownership Transfer"
-                    checked={tokenData.ownershipTransfer}
-                    onChange={(value) =>
-                        handleInputChange("ownershipTransfer", value)
-                    }
-                />
-                <InfoIconWithTooltip tooltipText="Allow token ownership to be transferred to another address" />
-            </FormGroup>
-
-            <CollapsibleSection title="Advanced Settings">
-                <FormGroup>
-                    <ToggleSwitch
-                        label="Pausable"
-                        checked={tokenData.pausable}
-                        onChange={(value) =>
-                            handleInputChange("pausable", value)
-                        }
-                    />
-                    <InfoIconWithTooltip tooltipText="Allow token transfers to be paused in case of emergency" />
-                </FormGroup>
-
-                <FormGroup>
-                    <ToggleSwitch
-                        label="Freezable"
-                        checked={tokenData.freezable}
-                        onChange={(value) =>
-                            handleInputChange("freezable", value)
-                        }
-                    />
-                    <InfoIconWithTooltip tooltipText="Allow specific addresses to be frozen (prevented from transferring tokens)" />
-                </FormGroup>
-
-                <FormGroup>
-                    <ToggleSwitch
-                        label="Wipeable"
-                        checked={tokenData.wipeable}
-                        onChange={(value) =>
-                            handleInputChange("wipeable", value)
-                        }
-                        disabled={!tokenData.freezable}
-                    />
-                    <InfoIconWithTooltip tooltipText="Allow frozen addresses to have their tokens wiped (requires Freezable)" />
-                </FormGroup>
-
-                <FormGroup>
-                    <ToggleSwitch
-                        label="Upgradable"
-                        checked={tokenData.upgradable}
-                        onChange={(value) =>
-                            handleInputChange("upgradable", value)
-                        }
-                    />
-                    <InfoIconWithTooltip tooltipText="Allow token contract to be upgraded in the future" />
-                </FormGroup>
-
-                <FormGroup>
-                    <ToggleSwitch
-                        label="NFT Creation Role"
-                        checked={tokenData.nftCreate}
-                        onChange={(value) =>
-                            handleInputChange("nftCreate", value)
-                        }
-                    />
-                    <InfoIconWithTooltip tooltipText="Allow token to create NFTs (requires special role)" />
-                </FormGroup>
-            </CollapsibleSection>
-        </>
-    );
-
-    const renderStep3 = () => (
-        <>
-            <SummaryItem>
-                <SummaryLabel>Token Name</SummaryLabel>
-                <SummaryValue>{tokenData.name}</SummaryValue>
-            </SummaryItem>
-
-            <SummaryItem>
-                <SummaryLabel>Token Ticker</SummaryLabel>
-                <SummaryValue>{tokenData.ticker}</SummaryValue>
-            </SummaryItem>
-
-            <SummaryItem>
-                <SummaryLabel>Initial Supply</SummaryLabel>
-                <SummaryValue>{tokenData.initialSupply}</SummaryValue>
-            </SummaryItem>
-
-            <SummaryItem>
-                <SummaryLabel>Decimals</SummaryLabel>
-                <SummaryValue>{tokenData.decimals}</SummaryValue>
-            </SummaryItem>
-
-            <SummaryItem>
-                <SummaryLabel>Supply Type</SummaryLabel>
-                <SummaryValue>
-                    {tokenData.supplyType === "fixed" ? "Fixed" : "Variable"}
-                </SummaryValue>
-            </SummaryItem>
-
-            <SummaryItem>
-                <SummaryLabel>Properties</SummaryLabel>
-                <SummaryValue>
-                    {[
-                        tokenData.burnable && "Burnable",
-                        tokenData.ownershipTransfer && "Ownership Transfer",
-                        tokenData.pausable && "Pausable",
-                        tokenData.freezable && "Freezable",
-                        tokenData.wipeable && "Wipeable",
-                        tokenData.upgradable && "Upgradable",
-                        tokenData.nftCreate && "NFT Creation",
-                    ]
-                        .filter(Boolean)
-                        .join(", ") || "None"}
-                </SummaryValue>
-            </SummaryItem>
-
-            <SummaryItem>
-                <SummaryLabel>Estimated Fee</SummaryLabel>
-                <SummaryValue>~0.05 EGLD</SummaryValue>
-            </SummaryItem>
-
-            <WarningBox>
-                ⚠️ Please review all settings carefully. Some properties cannot
-                be changed after deployment unless 'Upgradable' is enabled.
-            </WarningBox>
-
-            <CheckboxLabel>
-                <NativeCheckbox
-                    checked={confirmed}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setConfirmed(e.target.checked)
-                    }
-                />
-                <CustomCheckbox checked={confirmed} />I understand that
-                deploying a token to the blockchain is a permanent action and I
-                have reviewed all settings.
-            </CheckboxLabel>
-        </>
-    );
-
-    const renderStep4 = () => {
-        if (deploymentSuccessful) {
-            return (
-                <div style={{ fontFamily: "'Inter', sans-serif" }}>
-                    <h4
-                        style={{
-                            fontSize: "20px",
-                            fontWeight: 600,
-                            color: "#1F2937",
-                            marginBottom: "0.5rem",
-                        }}
-                    >
-                        {" "}
-                        {/* h3 per theme */}
-                        Transaction Submitted (Simulated)
-                    </h4>
-                    <p
-                        style={{
-                            fontSize: "16px",
-                            color: "#1F2937",
-                            lineHeight: "1.6",
-                            marginBottom: "0.5rem",
-                        }}
-                    >
-                        Your token has been successfully created on the test
-                        network (simulation).
-                    </p>
-                    <p
-                        style={{
-                            fontSize: "16px",
-                            color: "#1F2937",
-                            lineHeight: "1.6",
-                            marginBottom: "1rem",
-                        }}
-                    >
-                        Transaction ID (Simulated):{" "}
-                        <a
-                            href="#"
-                            onClick={(e) => e.preventDefault()}
-                            style={{
-                                color: "#3B82F6",
-                                textDecoration: "underline",
-                            }}
-                        >
-                            0x123abc456def789ghi (View on Explorer - Simulated)
-                        </a>
-                    </p>
-                    <p
-                        style={{
-                            fontSize: "16px",
-                            fontWeight: 500,
-                            color: "#1F2937",
-                            marginBottom: "1rem",
-                        }}
-                    >
-                        What's next?
-                    </p>
-                    <ButtonGroup>
-                        <Button
-                            onClick={() => {
-                                /* Logic to navigate to My Tokens or similar */ alert(
-                                    "Navigate to My Tokens (Placeholder)"
-                                );
-                            }}
-                            variant="secondary"
-                        >
-                            View My Tokens
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                setCurrentStep(0);
-                                setConfirmed(false);
-                                setDeploymentSuccessful(
-                                    false
-                                ); /* Reset relevant state for new token */
-                            }}
-                            variant="primary"
-                        >
-                            Create Another Token
-                        </Button>
-                    </ButtonGroup>
-                </div>
-            );
-        }
-
-        return (
-            <>
-                {isDeploying ? (
-                    <div>Deploying your token... Please wait.</div>
-                ) : (
-                    <Button
-                        variant="primary"
-                        onClick={handleDeploy}
-                        disabled={!confirmed || isDeploying}
-                    >
-                        {isDeploying ? "Deploying..." : "Deploy Token"}
-                    </Button>
-                )}
-            </>
-        );
+    const handleRetryDeployment = () => {
+        setDeploymentResult(null);
+        setCurrentStep(4); // Go back to deploy step
     };
 
     const renderCurrentStep = () => {
         switch (currentStep) {
-            case 0:
-                return renderStep1();
             case 1:
-                return renderStep2();
+                return (
+                    <BasicInformation
+                        tokenData={tokenData}
+                        onInputChange={handleInputChange}
+                        estimatedCost={estimatedCost}
+                    />
+                );
             case 2:
-                return renderStep3();
+                return (
+                    <TokenProperties
+                        tokenData={tokenData}
+                        onInputChange={handleInputChange}
+                        estimatedCost={estimatedCost}
+                    />
+                );
             case 3:
-                return renderStep4();
+                return (
+                    <ReviewConfirm
+                        tokenData={tokenData}
+                        estimatedCost={estimatedCost}
+                    />
+                );
+            case 4:
+                return (
+                    <Deploy
+                        onDeploy={handleDeploy}
+                        isLoading={isLoading}
+                        tokenData={tokenData}
+                        estimatedCost={estimatedCost}
+                    />
+                );
+            case 5:
+                return deploymentResult ? (
+                    <ResultsStep
+                        tokenData={tokenData}
+                        isSuccess={deploymentResult.isSuccess}
+                        transactionHash={deploymentResult.transactionHash}
+                        errorMessage={deploymentResult.errorMessage}
+                        onRetry={handleRetryDeployment}
+                    />
+                ) : null;
             default:
-                return null;
+                return (
+                    <BasicInformation
+                        tokenData={tokenData}
+                        onInputChange={handleInputChange}
+                        estimatedCost={estimatedCost}
+                    />
+                );
         }
     };
 
+    // Enhanced validation with educational feedback
+    const getStepValidation = () => {
+        switch (currentStep) {
+            case 1: {
+                const basicMissing = [];
+                if (!tokenData.name) basicMissing.push("Token Name");
+                if (!tokenData.ticker) basicMissing.push("Token Ticker");
+                if (!tokenData.initialSupply)
+                    basicMissing.push("Initial Supply");
+
+                return {
+                    isValid: basicMissing.length === 0,
+                    missing: basicMissing,
+                    message:
+                        basicMissing.length > 0
+                            ? `Please complete: ${basicMissing.join(", ")}`
+                            : "Ready to configure token properties",
+                };
+            }
+            case 2:
+                return {
+                    isValid: true,
+                    missing: [],
+                    message: "Token properties configured successfully",
+                };
+            case 3:
+                return {
+                    isValid: true,
+                    missing: [],
+                    message: "Ready to deploy your token",
+                };
+            case 4:
+            case 5:
+                return {
+                    isValid: true,
+                    missing: [],
+                    message: "Deployment in progress",
+                };
+            default:
+                return {
+                    isValid: false,
+                    missing: [],
+                    message: "",
+                };
+        }
+    };
+
+    const stepValidation = getStepValidation();
+
     return (
-        <WizardContainer>
-            <Stepper
-                steps={steps}
-                currentStep={currentStep}
-                onStepClick={(step) => {
-                    if (step < currentStep) {
-                        setCurrentStep(step);
-                    }
-                }}
-            />
+        <div className="min-h-screen bg-app-canvas">
+            {/* Enhanced Header with better visual hierarchy */}
+            <div className="bg-white/95 backdrop-blur-lg border-b border-ash/50 sticky top-0 z-40">
+                <div className="max-w-5xl mx-auto px-6 py-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => navigate("/app")}
+                                className="group p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 
+                                    hover:scale-105 active:scale-95"
+                                disabled={isLoading}
+                            >
+                                <svg
+                                    className="w-5 h-5 text-slate group-hover:text-graphite transition-colors"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M15 19l-7-7 7-7"
+                                    />
+                                </svg>
+                            </button>
+                            <div>
+                                <h1 className="text-2xl font-bold text-graphite">
+                                    Token Creation Wizard
+                                </h1>
+                                <p className="text-sm text-slate">
+                                    {steps[currentStep - 1].educationalNote} •
+                                    Step {currentStep} of {steps.length}
+                                </p>
+                            </div>
+                        </div>
 
-            <StepContainer>
-                {renderCurrentStep()}
+                        {/* Real-time cost indicator (PDR requirement) - Hide on results step */}
+                        {currentStep < 5 && (
+                            <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-create-50 rounded-xl border border-create-200">
+                                <div className="w-2 h-2 bg-create-500 rounded-full animate-pulse"></div>
+                                <span className="text-sm font-medium text-create-700">
+                                    Estimated Cost: {estimatedCost} EGLD
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
 
-                <ButtonGroup>
-                    {currentStep > 0 && (
-                        <Button onClick={handleBack}>Back</Button>
-                    )}
+            <div className="max-w-5xl mx-auto px-6 py-8">
+                {/* Enhanced stepper with better animations */}
+                <div className="mb-8">
+                    <WizardStepper
+                        currentStep={currentStep}
+                        totalSteps={5}
+                        steps={steps}
+                        validation={stepValidation}
+                    />
+                </div>
 
-                    {currentStep < steps.length - 1 && (
-                        <Button
-                            variant="primary"
-                            onClick={handleNext}
-                            disabled={
-                                !tokenData.name ||
-                                !tokenData.ticker ||
-                                !tokenData.initialSupply
-                            }
+                {/* Main Content with enhanced glass-morphism */}
+                <div className="relative">
+                    {/* Background gradient for enhanced visual appeal */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-create-50/30 via-blue-50/20 to-indigo-50/30 rounded-3xl blur-sm"></div>
+
+                    <div
+                        className="relative bg-white/90 backdrop-blur-sm rounded-3xl border border-white/60 
+                        shadow-level-3 hover:shadow-level-4 transition-all duration-500 p-8 mb-8"
+                    >
+                        <div className="animate-fade-in-scale-up">
+                            {renderCurrentStep()}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Enhanced Navigation with better feedback - Hide on deploy and results steps */}
+                {currentStep < 4 && (
+                    <div className="flex justify-between items-center">
+                        <button
+                            onClick={handleBack}
+                            disabled={currentStep === 1 || isLoading}
+                            className="group px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium
+                                hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed 
+                                transition-all duration-200 flex items-center gap-2
+                                disabled:hover:bg-transparent disabled:hover:border-gray-300"
                         >
-                            Next
-                        </Button>
-                    )}
-                </ButtonGroup>
-            </StepContainer>
-        </WizardContainer>
+                            <svg
+                                className="w-4 h-4 group-hover:-translate-x-1 transition-transform"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 19l-7-7 7-7"
+                                />
+                            </svg>
+                            Back
+                        </button>
+
+                        {/* Validation feedback */}
+                        <div className="hidden md:flex items-center gap-3 text-sm">
+                            {stepValidation.isValid ? (
+                                <div className="flex items-center gap-2 text-manage-600">
+                                    <svg
+                                        className="w-4 h-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                    {stepValidation.message}
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2 text-distribute-600">
+                                    <svg
+                                        className="w-4 h-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                    {stepValidation.message}
+                                </div>
+                            )}
+                        </div>
+
+                        <button
+                            onClick={handleNext}
+                            disabled={!stepValidation.isValid || isLoading}
+                            className="group px-8 py-3 bg-gradient-to-r from-create-500 to-create-600 text-white rounded-xl font-medium
+                                hover:from-create-600 hover:to-create-700 disabled:opacity-50 disabled:cursor-not-allowed 
+                                shadow-interactive hover:shadow-interactive-hover transform hover:scale-105 active:scale-95
+                                transition-all duration-200 flex items-center gap-2 min-w-[140px] justify-center
+                                disabled:hover:scale-100 disabled:hover:shadow-interactive"
+                        >
+                            {isLoading ? (
+                                <>
+                                    <svg
+                                        className="animate-spin w-4 h-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        ></path>
+                                    </svg>
+                                    Processing...
+                                </>
+                            ) : (
+                                <>
+                                    {currentStep === 3
+                                        ? "Deploy Token"
+                                        : "Continue"}
+                                    <svg
+                                        className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 5l7 7-7 7"
+                                        />
+                                    </svg>
+                                </>
+                            )}
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
     );
 };

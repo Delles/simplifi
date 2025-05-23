@@ -263,6 +263,13 @@ module.exports = {
         '90': '90',
         '100': '100',
       },
+
+      backgroundSize: {
+        'auto': 'auto',
+        'cover': 'cover',
+        'contain': 'contain',
+        '200': '200%',
+      },
     },
   },
   plugins: [],
