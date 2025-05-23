@@ -1,189 +1,177 @@
-# SimpliFi: UI Theme - "Modern Clarity"
+# SimpliFi: UI Theme - "Vibrant Democracy"
 
 **Overall Aesthetic & Feel:**
 
-The "Modern Clarity" UI theme for SimpliFi is designed to be **clean, minimalist, trustworthy, and highly intuitive**, catering especially to non-technical users as per the PDR. It prioritizes ease of use, clear information hierarchy, and a sense of security and professionalism. The aesthetic is bright and approachable, utilizing ample white space and clear visual cues to guide users through complex blockchain operations effortlessly. It aims to feel like a natural extension of the MultiversX ecosystem while establishing its own distinct, user-centric identity.
+The "Vibrant Democracy" UI theme for SimpliFi is designed to be **modern, engaging, trustworthy, and exceptionally intuitive**, directly embodying the PDR's vision of "democratizing token creation for everyone." It leverages contemporary design trends like **glass-morphism, dynamic gradients, and subtle animations** to create an inviting and exciting user experience. The theme prioritizes clarity, approachability, and a sense of empowerment, making complex blockchain operations feel simple and accessible.
 
-**Guiding Principles:**
+**Guiding Principles (Aligned with PDR & Implemented Design):**
 
--   **Simplicity Above All:** Uncluttered layouts, focused content.
--   **Guided Experience:** Clear visual hierarchy, intuitive navigation, and prominent calls to action.
--   **Trust & Security:** A polished, professional look that inspires confidence.
--   **Accessibility:** High contrast ratios, legible typography, and clear interactive states.
--   **Educational Support:** Design elements that seamlessly integrate guidance and explanations.
--   **Consistency:** Uniform application of all theme elements.
-
----
-
-**1. Color Palette:**
-
-The palette is built around a light, airy base with vibrant accents for interactivity and clear semantic colors for feedback.
-
--   **Core Backgrounds:**
-
-    -   **App Canvas/Page Background:** `#F7F9FC` (Cloud White - A very light, cool gray providing a subtle backdrop)
-    -   **Header/Sidebar Background:** `#FFFFFF` (Pure White - For primary navigation areas, offering clean separation)
-    -   **Content Surface Background (Cards, Modals, Input Fields):** `#FFFFFF` (Pure White - For main content areas ensuring high contrast and focus)
-
--   **Accent Colors:**
-
-    -   **Primary Accent (Primary CTAs, Active States, Key Icons):** `#00F2C3` (Cyber Teal - The vibrant MultiversX teal for high-visibility actions)
-    -   **Secondary Accent (Secondary CTAs, Links, Informative Icons):** `#3B82F6` (Hyperlink Blue - A modern, friendly blue for secondary actions and links)
-
--   **Text Colors:**
-
-    -   **Text - Primary (on light surfaces):** `#1F2937` (Graphite - A dark gray for primary content)
-    -   **Text - Secondary (on light surfaces):** `#6B7280` (Slate - A medium gray for less emphasized text, labels)
-    -   **Text - On Primary Accent (e.g., on Cyber Teal buttons):** `#0D2B2B` (Deep Teal/Black - Ensuring high contrast on the bright teal)
-    -   **Text - On Dark Surfaces (e.g., dark tooltips):** `#F3F4F6` (Mist - A light gray for readability)
-
--   **Borders & Dividers:**
-
-    -   **Standard Borders:** `#E5E7EB` (Ash - A light gray for subtle separation)
-
--   **Semantic Colors (Feedback & Status):**
-
-    -   **Success:** `#10B981` (Emerald Green - For success messages, confirmations)
-    -   **Warning (Non-critical alerts, pending states):** `#F59E0B` (Amber - For cautionary information, pending indicators)
-    -   **Error/Destructive:** `#EF4444` (Signal Red - For errors, critical warnings, destructive actions)
-    -   **Informational (General info messages, neutral alerts):** `#3B82F6` (Hyperlink Blue - Can also be used for neutral informational messages, consistent with secondary accent)
-
--   **Disabled States:**
-    -   **Disabled Background (Buttons, elements):** `#E5E7EB` (Ash)
-    -   **Disabled Text/Icons:** `#6B7280` (Slate - Ensuring better contrast than a lighter gray)
+-   **Democratizing Design:** Clean, uncluttered layouts with a focus on ease of use for non-technical users.
+-   **Engaging & Modern:** Sophisticated use of gradients, glass-morphism, and purposeful animations to create a delightful UX.
+-   **Educational & Guiding:** Visual cues, clear hierarchy, and integrated educational elements (tooltips, contextual info).
+-   **Trust & Professionalism:** Polished look and feel that inspires confidence in the platform's capabilities and security.
+-   **Accessibility First:** High contrast, legible typography (Inter), and clear interactive states, adhering to WCAG principles.
+-   **Consistent Visual Language:** Uniform application of colors, shadows, animations, and interactive patterns across all components.
+-   **Action-Oriented Clarity:** Clear distinction of Create, Manage, and Distribute actions through consistent color-coding.
 
 ---
 
-**2. Typography:**
+**1. Color Palette (Reflecting `tailwind.config.js` & PDR):**
 
-**Font Family:** **Inter** (A highly legible, versatile, and modern sans-serif family)
+The palette combines a clean, light base with vibrant, action-specific colors and gradients to create a dynamic and intuitive interface.
 
--   **Headings:**
-    -   `h1` (Page Titles): Inter Bold, 32px
-    -   `h2` (Section Titles): Inter SemiBold, 24px
-    -   `h3` (Card Titles, Sub-sections): Inter SemiBold, 20px
-    -   `h4` (Smaller Titles, emphasized labels): Inter Medium, 18px
--   **Body Text:**
-    -   `p (Primary)`: Inter Regular, 16px, Line Height: 1.6
-    -   `p (Secondary/Small)`: Inter Regular, 14px, Line Height: 1.5 (for captions, tooltips)
--   **Labels & Helper Text:**
-    -   `Input Labels`: Inter Medium, 14px, Color: `Slate (#6B7280)`
-    -   `Helper/Error Text (under inputs)`: Inter Regular, 12px
--   **Button Text:**
-    -   `Primary/Large Buttons`: Inter Medium, 16px
-    -   `Secondary/Small Buttons`: Inter Medium, 14px
--   **Input Field Text:** Inter Regular, 16px
+-   **Core Neutrals:**
 
-**Note:** Ensure adequate letter spacing for headings and comfortable line heights for all text to maximize readability.
+    -   **App Canvas/Page Background:** `app-canvas` (`#F7F9FC` - Cloud White)
+    -   **Primary Surface (Cards, Modals - Base):** `pure-white` (`#FFFFFF`)
+    -   **Text - Primary:** `graphite` (`#2D3748`)
+    -   **Text - Secondary:** `slate` (`#5A6A7F`)
+    -   **Borders & Dividers:** `ash` (`#E5E7EB`)
+    -   **Glassmorphism Tint (Subtle overlay on white/light backgrounds):** White with low opacity (e.g., `bg-white/80` or `bg-white/90`)
+
+-   **Action-Specific Color System (from `tailwind.config.js` & PDR):**
+
+    -   **Create (Blue Theme):**
+
+        -   Primary: `create-primary` (`#3c7fba`)
+        -   Secondary: `create-secondary` (`#2c5d8a`)
+        -   Light Backgrounds/Accents: `create-light` (`#f0f7ff`), `create-50` to `create-200` shades.
+        -   Gradients: Typically `from-create-500 to-blue-500` or similar variations.
+
+    -   **Manage (Green Theme):**
+
+        -   Primary: `manage-primary` (`#10B981`)
+        -   Secondary: `manage-secondary` (`#059669`)
+        -   Light Backgrounds/Accents: `manage-light` (`#f0fdf4`), `manage-50` to `manage-200` shades.
+        -   Gradients: Typically `from-manage-500 to-emerald-500` or similar variations.
+
+    -   **Distribute (Orange/Amber Theme):**
+        -   Primary: `distribute-primary` (`#F59E0B`)
+        -   Secondary: `distribute-secondary` (`#d97706`)
+        -   Light Backgrounds/Accents: `distribute-light` (`#fffbeb`), `distribute-50` to `distribute-200` shades.
+        -   Gradients: Typically `from-distribute-500 to-amber-500` or similar variations.
+
+-   **General Accent & Utility:**
+
+    -   **Digital Lavender:** `digital-lavender` (`#E0D8FF`) - For subtle highlights or educational callouts.
+    -   **Link Blue:** `link-blue` (`#3B82F6`) - For general hyperlinks if not covered by action colors.
+
+-   **Semantic & Risk Communication (from `tailwind.config.js`):**
+
+    -   **Success:** `success` (`#10B981`) / `risk-safe`
+    -   **Warning:** `warning` (`#F59E0B`) / `risk-caution`
+    -   **Error/Danger:** `error` (`#EF4444`) / `risk-danger`
+    -   Associated light backgrounds: `risk-safe-bg`, `risk-caution-bg`, `risk-danger-bg`.
+
+-   **Educational Components (from `tailwind.config.js`):**
+    -   Primary: `education-primary` (`#3c7fba`)
+    -   Secondary: `education-secondary` (`#E0D8FF`)
+    -   Backgrounds: `education-background` (`#f8fafc`)
+    -   Tooltip: `tooltip-bg` (`#1e293b`), `tooltip-text` (`#f8fafc`)
 
 ---
 
-**3. Shadowing & Elevation:**
+**2. Typography (Reflecting `tailwind.config.js`):**
 
-Subtle, soft shadows are used to create depth, denote interactivity, and establish a clear visual hierarchy. Light source is implied from the top.
+**Font Family:**
 
--   **Level 1 (Subtle lift: Cards, static elements needing slight separation):**
-    `box-shadow: 0px 1px 3px rgba(25, 39, 55, 0.05), 0px 1px 2px rgba(25, 39, 55, 0.03);`
-    _(Using a desaturated blue for shadow color instead of pure black gives a more refined look)_
--   **Level 2 (Standard elevation: Active cards on hover, Modals, Dropdowns):**
-    `box-shadow: 0px 4px 8px rgba(25, 39, 55, 0.07), 0px 2px 4px rgba(25, 39, 55, 0.05);`
--   **Level 3 (Significant elevation: Critical pop-ups, focused overlays):**
-    `box-shadow: 0px 10px 20px rgba(25, 39, 55, 0.08), 0px 5px 10px rgba(25, 39, 55, 0.06);`
--   **Interactive Hover Shadow (on Cards, Buttons):** Transition to a slightly more pronounced shadow (e.g., from Level 1 to a slightly larger Level 1 or a soft Level 2) and/or a subtle upward transform (`transform: translateY(-2px)`).
+-   **Sans-serif:** `Inter` (Primary for UI text, ensuring clarity and modern appeal)
+-   **Monospace:** `JetBrains Mono` (For code snippets or tabular numeric data where applicable)
+
+**Semantic Sizes & Weights (Examples from `tailwind.config.js` theme extension):**
+
+-   `h1`: `48px`, `font-bold`
+-   `h2`: `36px`, `font-semibold`
+-   `h3`: `24px`, `font-semibold` (e.g., Card titles)
+-   `body-primary`: `16px` (Standard text)
+-   `body-secondary`: `14px` (Helper text, captions)
+-   `button-md`: `14px`, `font-medium`
+
+**Line Height & Letter Spacing:** Utilize Tailwind's default line heights and letter spacing, or the custom ones defined (e.g., `leading-relaxed`, `tracking-tight`) to ensure optimal readability.
 
 ---
 
-**4. UI Elements:**
+**3. Shadowing & Elevation (Reflecting `tailwind.config.js` `boxShadow`):**
 
-Consistency in styling across all UI elements is crucial. Default border-radius for interactable elements like buttons and inputs: **6px to 8px**. For cards and modals: **8px to 12px**.
+Sophisticated shadow system to create depth and denote interactivity, enhancing the glass-morphism effect.
+
+-   **`level-1` to `level-4`:** Progressive shadow intensity for cards, modals, and elevated surfaces.
+-   **`soft-lift`, `soft-hover`:** For interactive elements, providing visual feedback on hover.
+-   **`interactive`, `interactive-hover`:** Specific shadows for primary interactive elements, potentially using accent colors (e.g., `theme-blue` tints).
+-   **`tooltip`, `modal`, `card`, `card-hover`:** Contextual shadows for specific UI components.
+
+---
+
+**4. Glass-morphism & Backgrounds:**
+
+-   **Primary Method:** Apply a semi-transparent white background (e.g., `bg-white/80`, `bg-white/90`) on elements placed over colorful or gradient backgrounds.
+-   **Blur:** Utilize `backdrop-blur-sm` or `backdrop-blur-md` for the frosted glass effect.
+-   **Borders:** Often a subtle, almost transparent white border (e.g., `border border-white/30` or `border-white/50`) to catch light and define edges.
+-   **Underlying Gradients:** Place glass-morphism elements on top of dynamic, often subtle, gradient backgrounds (e.g., `bg-gradient-to-br from-create-50 to-blue-100`).
+
+---
+
+**5. Animations & Micro-interactions (Reflecting `tailwind.config.js` `animation`):**
+
+Purposeful and smooth animations to enhance user experience without being distracting.
+
+-   **Fade-ins:** `fade-in-scale-up`, `fade-in-up`, `fade-in-down` for element entry.
+-   **Gradient Shift:** `gradient-shift` for dynamic background effects (e.g., on banners, progress bars).
+-   **Pulse & Bounce:** `pulse-gentle`, `bounce-gentle` for subtle attention-grabbing on icons or badges.
+-   **Hover Effects:** Scale transforms (`group-hover:scale-105`), rotations (`group-hover:rotate-3`), shadow changes, color transitions.
+-   **Staggered Animations:** Apply delays to child elements within a list or grid to create a cascading reveal effect (achieved via `style={{ animationDelay: ... }}`).
+-   **Transition Timing:** Custom easing functions like `bounce-in` or `ease-in-out-back` for unique interaction feels.
+
+---
+
+**6. UI Elements (Examples reflecting implemented components):**
 
 -   **Buttons:**
 
-    -   **Primary CTA:**
-        -   Background: `Cyber Teal (#00F2C3)`
-        -   Text: `Deep Teal/Black (#0D2B2B)`
-        -   Border: None
-        -   Padding: ~12px 24px
-        -   Shadow: Level 1 (subtle); Hover: Slight lift, darken background slightly.
-    -   **Secondary CTA (Filled):**
-        -   Background: `Hyperlink Blue (#3B82F6)`
-        -   Text: `Pure White (#FFFFFF)`
-        -   Others: Similar to Primary.
-    -   **Secondary CTA (Outlined):**
-        -   Background: `Pure White (#FFFFFF)`
-        -   Text: `Hyperlink Blue (#3B82F6)`
-        -   Border: 1px solid `Hyperlink Blue (#3B82F6)`
-        -   Hover: Background `Hyperlink Blue` at 10% opacity.
-    -   **Destructive CTA:**
-        -   Background: `Signal Red (#EF4444)`
-        -   Text: `Pure White (#FFFFFF)`
-        -   Others: Similar to Primary.
-    -   **Disabled State:**
-        -   Background: `Ash (#E5E7EB)`
-        -   Text: `Slate (#6B7280)`
-        -   Shadow: None. Cursor: `not-allowed`.
-    -   **Focus State (Keyboard):** Add a 2px solid outline using the respective accent color (e.g., `Cyber Teal` for primary, `Hyperlink Blue` for secondary) with a small offset.
+    -   Often feature gradient backgrounds (action-specific), `shadow-lg`, `hover:shadow-xl`, `transform hover:scale-105`.
+    -   Icons within buttons often have their own subtle animations on hover (e.g., `group-hover/btn:scale-110`).
 
--   **Input Fields (Text, Number, Select):**
+-   **Cards (e.g., `PrimaryActionCard`, `TokenCard`, Sidebar component cards):**
 
-    -   Background: `Pure White (#FFFFFF)`
-    -   Border: 1px solid `Ash (#E5E7EB)`
-    -   Text Color: `Graphite (#1F2937)`
-    -   Placeholder Text Color: `Slate (#6B7280)` (with opacity if needed, e.g., 0.7)
-    -   Focus State: Border 1.5px solid `Hyperlink Blue (#3B82F6)`, subtle `Level 1` inner shadow or glow.
-    -   Error State: Border 1.5px solid `Signal Red (#EF4444)`.
-    -   Disabled State: Background `Ash (#E5E7EB)`, Text `Slate (#6B7280)`.
+    -   Foundation: `relative backdrop-blur-sm bg-white/90 rounded-2xl border border-white/50 shadow-level-2 hover:shadow-level-3`.
+    -   May include gradient overlays or accent lines (action-specific).
+    -   Decorative corner elements or background blurs for added visual flair.
 
--   **Toggle Switches & Radio Buttons/Checkboxes:**
+-   **Badges (e.g., Status Badges, Level Badges):**
 
-    -   **Toggle Switch (On):** Background `Cyber Teal (#00F2C3)`.
-    -   **Toggle Switch (Off):** Background `Ash (#E5E7EB)`.
-    -   **Radio/Checkbox (Selected):** Icon/fill `Hyperlink Blue (#3B82F6)` or `Cyber Teal (#00F2C3)` for primary selections, border `Ash`.
-    -   **Focus:** Visible outline similar to buttons.
+    -   Often use lighter shades of action colors (e.g., `bg-create-100 text-create-700`).
+    -   Rounded, potentially with icons and subtle pulse animations.
 
--   **Cards & Modals:**
+-   **Progress Bars:**
 
-    -   Background: `Pure White (#FFFFFF)`
-    -   Shadow: `Level 1` or `Level 2` for Cards. Modals `Level 2` or `Level 3`.
-    -   Modal Backdrop: `Graphite (#1F2937)` with ~60-70% opacity.
+    -   Animated `gradient-shift` on the fill.
+    -   Rounded, potentially with step markers or percentage text.
 
--   **Navigation (Sidebar/Header):**
+-   **Avatars/Icons:**
 
-    -   **Header:** Background `Pure White (#FFFFFF)`, Shadow `Level 1` (bottom only).
-    -   **Sidebar:** Background `Pure White (#FFFFFF)`.
-    -   **Nav Links (Text & Icon):** Color `Slate (#6B7280)`.
-    -   **Active Nav Link:** Text & Icon color `Cyber Teal (#00F2C3)`, Font-weight: SemiBold. Optional: A subtle `Cyber Teal` left border (2-3px) or a very light teal background (`Cyber Teal` at 5-10% opacity).
+    -   Token Avatars: Dynamic gradients based on ticker hash.
+    -   User Avatars: Emoji-based, generated from wallet address.
+    -   Section Icons: Often placed in a colored, rounded-xl container with shadow and hover animations (scale, rotate).
 
--   **Tooltips (`InfoIconWithTooltip`):**
-
-    -   Icon: `Slate (#6B7280)` or `Hyperlink Blue (#3B82F6)`.
-    -   Tooltip Background: `Graphite (#1F2937)`.
-    -   Tooltip Text: `Mist (#F3F4F6)`.
-    -   Border Radius: 4px.
-
--   **Stepper Navigation:**
-
-    -   **Active Step:** Circle/Icon fill `Cyber Teal (#00F2C3)`, Text `Cyber Teal (#00F2C3)`.
-    -   **Completed Step:** Circle/Icon fill `Emerald Green (#10B981)`, Text `Slate (#6B7280)`.
-    -   **Upcoming Step:** Circle/Icon border `Ash (#E5E7EB)`, fill `Pure White (#FFFFFF)`, Text `Silver (#9CA3AF)`.
-    -   Connecting Lines: `Ash (#E5E7EB)`; `Cyber Teal` for filled progress.
-
--   **Transaction Status Notifications (Toasts/Alerts):**
-
-    -   Sharp, clear iconography alongside text. Rounded corners (e.g., 8px), `Level 2` shadow.
-    -   **Success:** Background `Emerald Green (#10B981)`, Text `Pure White (#FFFFFF)`.
-    -   **Warning:** Background `Amber (#F59E0B)`, Text `Graphite (#1F2937)`.
-    -   **Error:** Background `Signal Red (#EF4444)`, Text `Pure White (#FFFFFF)`.
-    -   **Info:** Background `Hyperlink Blue (#3B82F6)` (or a lighter shade like `Cloud White` with `Hyperlink Blue` text/border), Text `Pure White (#FFFFFF)`.
-
--   **Tables:**
-    -   Header Background: `Cloud White (#F7F9FC)`.
-    -   Header Text: `Graphite (#1F2937)`, Inter SemiBold, 14px.
-    -   Row Background: `Pure White (#FFFFFF)`.
-    -   Cell Text: `Graphite (#1F2937)`.
-    -   Borders: Horizontal lines 1px solid `Ash (#E5E7EB)`.
-    -   Hover on Rows (if interactive): Subtle background change, e.g., `Cloud White (#F7F9FC)`.
+-   **Input Fields:** (Assumed, based on general modern UI best practices if not explicitly detailed in our work so far)
+    -   Background: `pure-white` or very light gray.
+    -   Border: `ash` or `silver`.
+    -   Focus: Border color change to `theme-blue` or action-specific primary, subtle shadow.
+    -   Rounded corners: `rounded-lg` or `rounded-xl`.
 
 ---
 
-This "Modern Clarity" UI theme provides a comprehensive visual foundation for SimpliFi, ensuring a cohesive, engaging, and user-friendly experience that aligns with the project's core goals of simplicity, accessibility, and trust within the MultiversX ecosystem.
+**7. Border Radius (Reflecting `tailwind.config.js` `borderRadius`):**
+
+Generous use of rounded corners for a softer, modern, and approachable feel.
+
+-   **`ui-element` (`8px`):** General interactive elements.
+-   **`card` (`12px`):** Standard cards.
+-   **`modal` (`16px`):** Modals and larger containers.
+-   **`feature-module` (`20px`):** As seen in many Dashboard components (`rounded-2xl`).
+-   **`button` (`8px` to `12px` / `rounded-xl`):** Buttons often use `rounded-lg` or `rounded-xl`.
+-   **`badge` (`12px` or `rounded-full`):** For small status indicators.
+
+---
+
+This "Vibrant Democracy" UI theme provides a comprehensive visual and interactive foundation for SimpliFi, directly reflecting the design decisions and PDR goals. It ensures a cohesive, engaging, educational, and user-friendly experience that truly aims to democratize token creation on the MultiversX platform.
