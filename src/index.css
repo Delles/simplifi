@@ -1,7 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-body {
-    @apply bg-cloud-white text-graphite font-sans text-body-primary leading-body-primary;
-}

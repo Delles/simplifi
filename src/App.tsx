@@ -5,13 +5,14 @@ import LandingLayout from "./layouts/LandingLayout";
 // import { DappProvider } from "@multiversx/sdk-dapp/wrappers"; // Removed
 // import { EnvironmentsEnum } from "@multiversx/sdk-dapp/types"; // Removed, DappProvider config is in main.tsx
 import LandingPage from "./pages/LandingPage/LandingPage"; // Add LandingPage import
-import About from "./pages/About/About"; // Assuming these exist or will be created
 import Dashboard from "./pages/Dashboard/Dashboard"; // Assuming these exist or will be created
 import SettingsPagePlaceholder from "./pages/SettingsPagePlaceholder/SettingsPagePlaceholder"; // Assuming these exist or will be created
 import { TokenCreationWizard } from "./pages/TokenCreationWizard/TokenCreationWizard";
 import { AuthGuard } from "./components/AuthGuard"; // Import AuthGuard
 import { GuestGuard } from "./components/GuestGuard"; // Import GuestGuard
 import { LPCreationWizard } from "./pages/LPCreationWizard/LPCreationWizard";
+import EducationCenter from "./pages/EducationCenter"; // Add EducationCenter import
+
 export default function App() {
     return (
         // <DappProvider  // Removed DappProvider from here
@@ -35,7 +36,7 @@ export default function App() {
                     }
                 >
                     <Route index element={<LandingPage />} />
-                    <Route path="about" element={<About />} />
+                    <Route path="learn" element={<EducationCenter />} />
                 </Route>
 
                 {/* Protected routes wrapped with AuthGuard */}
@@ -60,6 +61,7 @@ export default function App() {
                         path="add-liquidity"
                         element={<LPCreationWizard />}
                     />
+                    <Route path="learn" element={<EducationCenter />} />
                     {/* other authenticated routes */}
                 </Route>
             </Routes>
