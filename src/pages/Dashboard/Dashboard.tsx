@@ -1,103 +1,92 @@
-import { Link } from "react-router-dom";
-import TokenSummaryCard from "../../components/shared/TokenSummaryCard";
+// Dashboard Components
+import WelcomeSection from "./components/WelcomeSection";
+import UserJourneyBanner from "./components/UserJourneyBanner";
+import { QuickActionsGrid } from "./components/QuickActions";
+import { TokenPortfolio } from "./components/TokenPortfolio";
+import type { Token } from "./components/TokenPortfolio";
+import {
+    LearningProgress,
+    CommunityHighlights,
+    PlatformStats,
+} from "./components/Sidebar";
 
-// Mock data for tokens
-const mockTokens = [
-    { id: "1", name: "SimpliFi Token", ticker: "SIMP" },
-    { id: "2", name: "Test Token", ticker: "TEST" },
+// Mock data for enhanced dashboard
+const mockTokens: Token[] = [
+    {
+        id: "1",
+        name: "SimpliFi Token",
+        ticker: "SIMP",
+        supply: "1000000",
+        holders: 156,
+        status: "active",
+        lastActivity: "2 hours ago",
+    },
+    {
+        id: "2",
+        name: "Test Token",
+        ticker: "TEST",
+        supply: "500000",
+        holders: 42,
+        status: "paused",
+        lastActivity: "1 day ago",
+    },
 ];
+
+const mockLearningProgress = {
+    completedSteps: 3,
+    totalSteps: 8,
+    currentTopic: "Token Economics",
+    nextRecommendation: "Learn about Liquidity Provision",
+};
+
+const mockCommunityHighlights = [
+    {
+        id: 1,
+        title: "🎨 Artist launches fan token for exclusive content",
+        description:
+            "Digital artist Sarah M. distributed 50K tokens to 1,200 fans",
+        category: "Creator Success",
+    },
+    {
+        id: 2,
+        title: "🚀 Startup raises $100K through utility token",
+        description: "TechFlow used SimpliFi to launch their platform token",
+        category: "Startup Win",
+    },
+];
+
+const mockPlatformStats = {
+    tokensCreated: "12,450+",
+    activeCreators: "3,280+",
+    totalAirdrops: "8,950+",
+};
 
 export default function Dashboard() {
     return (
         <div className="p-6 md:p-8 bg-cloud-white min-h-screen">
-            {/* Greeting Section */}
-            <div className="mb-8">
-                <h1 className="text-h1 font-bold text-graphite mb-4">
-                    Welcome back!
-                </h1>
-                <p className="text-body-primary text-slate leading-body-primary">
-                    Manage your tokens and access key features from your
-                    dashboard.
-                </p>
-            </div>
+            {/* Welcome Section */}
+            <WelcomeSection
+                tokenCount={mockTokens.length}
+                networkName="Mainnet"
+            />
 
-            {/* Quick Actions Section */}
-            <div className="mb-8">
-                <h2 className="text-h2 font-semibold text-graphite mb-4">
-                    Quick Actions
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <Link
-                        to="/app/create-token"
-                        className="bg-pure-white p-6 rounded-card shadow-level-1 hover:shadow-level-2 transition-all duration-200 hover:-translate-y-0.5"
-                    >
-                        <h3 className="text-h3 font-semibold text-graphite mb-2">
-                            Create New Token
-                        </h3>
-                        <p className="text-body-secondary text-slate leading-body-secondary">
-                            Launch your own token
-                        </p>
-                    </Link>
-                    <Link
-                        to="/app/my-tokens"
-                        className="bg-pure-white p-6 rounded-card shadow-level-1 hover:shadow-level-2 transition-all duration-200 hover:-translate-y-0.5"
-                    >
-                        <h3 className="text-h3 font-semibold text-graphite mb-2">
-                            Manage My Tokens
-                        </h3>
-                        <p className="text-body-secondary text-slate leading-body-secondary">
-                            View and manage your tokens
-                        </p>
-                    </Link>
-                    <Link
-                        to="/airdrop"
-                        className="bg-pure-white p-6 rounded-card shadow-level-1 hover:shadow-level-2 transition-all duration-200 hover:-translate-y-0.5"
-                    >
-                        <h3 className="text-h3 font-semibold text-graphite mb-2">
-                            Airdrop Tokens
-                        </h3>
-                        <p className="text-body-secondary text-slate leading-body-secondary">
-                            Distribute tokens to users
-                        </p>
-                    </Link>
-                    <Link
-                        to="/app/add-liquidity"
-                        className="bg-pure-white p-6 rounded-card shadow-level-1 hover:shadow-level-2 transition-all duration-200 hover:-translate-y-0.5"
-                    >
-                        <h3 className="text-h3 font-semibold text-graphite mb-2">
-                            Add Liquidity
-                        </h3>
-                        <p className="text-body-secondary text-slate leading-body-secondary">
-                            Provide liquidity for your tokens
-                        </p>
-                    </Link>
+            {/* User Journey Banner */}
+            <UserJourneyBanner tokenCount={mockTokens.length} />
+
+            {/* Quick Actions Grid */}
+            <QuickActionsGrid tokenCount={mockTokens.length} />
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Token Portfolio */}
+                <TokenPortfolio tokens={mockTokens} />
+
+                {/* Right Sidebar */}
+                <div className="space-y-6">
+                    <LearningProgress data={mockLearningProgress} />
+                    <CommunityHighlights highlights={mockCommunityHighlights} />
+                    <PlatformStats data={mockPlatformStats} />
                 </div>
-            </div>
-
-            {/* My Managed Tokens Section */}
-            <div>
-                <h2 className="text-h2 font-semibold text-graphite mb-4">
-                    My Managed Tokens
-                </h2>
-                {mockTokens.length === 0 ? (
-                    <div className="bg-pure-white p-8 rounded-card shadow-level-1">
-                        <p className="text-body-primary text-slate text-center leading-body-primary">
-                            You haven't created any tokens yet. Create your
-                            first token to get started!
-                        </p>
-                    </div>
-                ) : (
-                    <div className="space-y-4">
-                        {mockTokens.map((token) => (
-                            <TokenSummaryCard
-                                key={token.id}
-                                id={token.id}
-                                name={token.name}
-                                ticker={token.ticker}
-                            />
-                        ))}
-                    </div>
-                )}
             </div>
         </div>
     );

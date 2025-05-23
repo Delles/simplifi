@@ -28,24 +28,50 @@ module.exports = {
         'create': {
           50: '#f0f7ff',
           100: '#e0efff',
+          200: '#c7e4ff',
+          300: '#9fd1ff',
+          400: '#66b3ff',
           500: '#3c7fba', // theme-blue
           600: '#2c5d8a', // theme-blue-dark
           700: '#1d4167',
+          800: '#152e4d',
+          900: '#0f1e33',
         },
+        'create-primary': '#3c7fba',
+        'create-secondary': '#2c5d8a',
+        'create-light': '#f0f7ff',
+
         'manage': {
           50: '#f0fdf4',
           100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
           500: '#10B981', // emerald-green
           600: '#059669',
           700: '#047857',
+          800: '#065f46',
+          900: '#064e3b',
         },
+        'manage-primary': '#10B981',
+        'manage-secondary': '#059669',
+        'manage-light': '#f0fdf4',
+
         'distribute': {
           50: '#fffbeb',
           100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
           500: '#F59E0B', // amber
           600: '#d97706',
           700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
         },
+        'distribute-primary': '#F59E0B',
+        'distribute-secondary': '#d97706',
+        'distribute-light': '#fffbeb',
 
         // Risk Communication (Traffic Light System)
         'risk': {
