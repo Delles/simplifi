@@ -10,16 +10,16 @@ export default function QuickActionsGrid({
     const createActions = [
         {
             type: "primary" as const,
-            title: "Launch New Token",
-            description: "Create your token in minutes with our guided wizard",
+            title: "Create Token",
+            description: "Launch in minutes",
             route: "/app/create-token",
             icon: "🚀",
-            subtitle: "Popular with creators & startups",
+            subtitle: tokenCount === 0 ? "Start here" : "Create another",
         },
         {
             type: "secondary" as const,
-            title: "Learn Token Basics",
-            description: "Understand tokenomics",
+            title: "Learn Basics",
+            description: "Token fundamentals",
             route: "/app/learn",
             icon: "📚",
         },
@@ -28,16 +28,18 @@ export default function QuickActionsGrid({
     const manageActions = [
         {
             type: "primary" as const,
-            title: "Token Portfolio",
-            description: "Monitor and control your token ecosystem",
+            title: tokenCount > 0 ? "My Tokens" : "Token Portfolio",
+            description:
+                tokenCount > 0 ? `${tokenCount} tokens` : "Coming soon",
             route: "/app/my-tokens",
             icon: "📊",
-            subtitle: `${tokenCount} tokens managed`,
+            subtitle:
+                tokenCount > 0 ? "Manage & monitor" : "Create first token",
         },
         {
             type: "secondary" as const,
             title: "Add Liquidity",
-            description: "Make token tradable",
+            description: tokenCount > 0 ? "Enable trading" : "After creation",
             route: "/app/add-liquidity",
             icon: "💧",
         },
@@ -46,106 +48,55 @@ export default function QuickActionsGrid({
     const distributeActions = [
         {
             type: "primary" as const,
-            title: "Airdrop Campaign",
-            description: "Reward your community with batch distributions",
+            title: "Airdrop",
+            description: tokenCount > 0 ? "Reward community" : "Coming soon",
             route: "/airdrop",
             icon: "🎯",
-            subtitle: "Perfect for community growth",
+            subtitle:
+                tokenCount > 0 ? "Batch distribution" : "Create token first",
         },
         {
             type: "secondary" as const,
-            title: "Join Community",
-            description: "Connect with creators",
+            title: "Community",
+            description: "Connect & share",
             route: "/community",
             icon: "👥",
         },
     ];
 
     return (
-        <div className="mb-12">
-            <div className="mb-8 text-center animate-fade-in-up">
-                <div className="inline-flex items-center gap-3 mb-4">
-                    <div className="w-2 h-2 bg-create-500 rounded-full animate-pulse"></div>
-                    <h2 className="text-3xl font-bold text-graphite">
-                        Quick Actions
-                    </h2>
-                    <div
-                        className="w-2 h-2 bg-distribute-500 rounded-full animate-pulse"
-                        style={{ animationDelay: "0.5s" }}
-                    ></div>
-                </div>
-                <p className="text-lg text-slate max-w-2xl mx-auto">
-                    Everything you need to create, manage, and distribute tokens
-                    - organized by your current journey stage
+        <div className="mb-8">
+            <div className="mb-6">
+                <h2 className="text-xl font-bold text-graphite mb-2">
+                    Quick Actions
+                </h2>
+                <p className="text-sm text-slate">
+                    {tokenCount === 0 &&
+                        "Everything you need to get started with token creation"}
+                    {tokenCount > 0 &&
+                        tokenCount < 3 &&
+                        "Manage your tokens and grow your ecosystem"}
+                    {tokenCount >= 3 &&
+                        "Advanced tools for experienced creators"}
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 xl:gap-12">
-                <div
-                    className="animate-fade-in-up"
-                    style={{ animationDelay: "0.1s" }}
-                >
-                    <ActionCategory
-                        title="Create"
-                        color="create"
-                        actions={createActions}
-                    />
-                </div>
-
-                <div
-                    className="animate-fade-in-up"
-                    style={{ animationDelay: "0.2s" }}
-                >
-                    <ActionCategory
-                        title="Manage"
-                        color="manage"
-                        actions={manageActions}
-                    />
-                </div>
-
-                <div
-                    className="animate-fade-in-up"
-                    style={{ animationDelay: "0.3s" }}
-                >
-                    <ActionCategory
-                        title="Distribute"
-                        color="distribute"
-                        actions={distributeActions}
-                    />
-                </div>
-            </div>
-
-            <div
-                className="mt-12 text-center animate-fade-in-up"
-                style={{ animationDelay: "0.4s" }}
-            >
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl px-8 py-6 border border-white/50 shadow-level-1 max-w-4xl mx-auto">
-                    <div className="flex items-center justify-center gap-4 mb-3">
-                        <span className="text-2xl">💡</span>
-                        <h3 className="text-lg font-semibold text-graphite">
-                            Pro Tips
-                        </h3>
-                        <span className="text-2xl">🎯</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                        <div className="text-create-600">
-                            <span className="font-medium">New to tokens?</span>{" "}
-                            Start with our guided creation wizard
-                        </div>
-                        <div className="text-manage-600">
-                            <span className="font-medium">
-                                Growing your project?
-                            </span>{" "}
-                            Add liquidity to enable trading
-                        </div>
-                        <div className="text-distribute-600">
-                            <span className="font-medium">
-                                Building community?
-                            </span>{" "}
-                            Use airdrops for engagement
-                        </div>
-                    </div>
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <ActionCategory
+                    title="Create"
+                    color="create"
+                    actions={createActions}
+                />
+                <ActionCategory
+                    title="Manage"
+                    color="manage"
+                    actions={manageActions}
+                />
+                <ActionCategory
+                    title="Distribute"
+                    color="distribute"
+                    actions={distributeActions}
+                />
             </div>
         </div>
     );

@@ -26,10 +26,10 @@ const getTimeBasedTheme = (): TimeBasedTheme => {
             gradient:
                 "bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-500",
             lightGradient:
-                "bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50",
+                "bg-gradient-to-r from-amber-50/50 via-orange-50/50 to-yellow-50/50",
             accentColor: "text-amber-600",
             iconColor: "bg-amber-500",
-            description: "A fresh start to build something amazing today!",
+            description: "A fresh start to build something amazing!",
         };
     } else if (hour < 17) {
         return {
@@ -38,11 +38,10 @@ const getTimeBasedTheme = (): TimeBasedTheme => {
             gradient:
                 "bg-gradient-to-r from-create-500 via-blue-500 to-indigo-500",
             lightGradient:
-                "bg-gradient-to-r from-create-50 via-blue-50 to-indigo-50",
+                "bg-gradient-to-r from-create-50/50 via-blue-50/50 to-indigo-50/50",
             accentColor: "text-create-600",
             iconColor: "bg-create-500",
-            description:
-                "The perfect time to make progress on your token journey!",
+            description: "Perfect time to make progress!",
         };
     } else {
         return {
@@ -51,10 +50,10 @@ const getTimeBasedTheme = (): TimeBasedTheme => {
             gradient:
                 "bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-600",
             lightGradient:
-                "bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50",
+                "bg-gradient-to-r from-indigo-50/50 via-purple-50/50 to-blue-50/50",
             accentColor: "text-indigo-600",
             iconColor: "bg-indigo-500",
-            description: "Time to unwind and plan your next big token idea!",
+            description: "Time to plan your next big idea!",
         };
     }
 };
@@ -80,13 +79,14 @@ const generateUserAvatar = (address: string) => {
     return avatars[charSum % avatars.length];
 };
 
-const getStatusBadgeColor = (tokenCount: number) => {
-    if (tokenCount === 0) return "text-slate bg-gray-100 border-gray-200";
-    if (tokenCount < 3)
-        return "text-create-700 bg-create-100 border-create-200";
-    if (tokenCount < 5)
-        return "text-manage-700 bg-manage-100 border-manage-200";
-    return "text-distribute-700 bg-distribute-100 border-distribute-200";
+const formatBalance = (balance: string) => {
+    const num = parseFloat(balance);
+    if (num >= 1000000) {
+        return `${(num / 1000000).toFixed(2)}M`;
+    } else if (num >= 1000) {
+        return `${(num / 1000).toFixed(2)}K`;
+    }
+    return num.toFixed(2);
 };
 
 const getNetworkStatusColor = (networkName: string) => {
@@ -107,6 +107,9 @@ export default function WelcomeSection({
     const userAvatar = generateUserAvatar(account?.address || "");
     const hour = new Date().getHours();
 
+    // Format EGLD balance
+    const egldBalance = account?.balance ? formatBalance(account.balance) : "0";
+
     useEffect(() => {
         setMounted(true);
         // In a real app, this would come from user preferences/ENS/profile
@@ -121,164 +124,126 @@ export default function WelcomeSection({
 
     if (!mounted) {
         return (
-            <div className="mb-8 h-32 bg-gray-100 animate-pulse rounded-2xl"></div>
+            <div className="mb-6 h-24 bg-gray-100 animate-pulse rounded-xl"></div>
         );
     }
 
     return (
-        <div className="mb-8 group">
-            {/* Main Welcome Banner */}
+        <div className="mb-6">
+            {/* Main Welcome Section - More Compact */}
             <div
-                className={`relative overflow-hidden rounded-2xl ${theme.lightGradient} border-2 border-white/50 shadow-level-2 hover:shadow-level-3 transition-all duration-500`}
+                className={`relative rounded-xl ${theme.lightGradient} border border-white/50 shadow-level-1 hover:shadow-level-2 transition-all duration-300 p-6`}
             >
-                {/* Decorative Background Elements */}
-                <div className="absolute inset-0 opacity-20">
+                {/* Subtle Background Decoration */}
+                <div className="absolute inset-0 opacity-10">
                     <div
-                        className={`absolute top-0 right-0 w-40 h-40 ${theme.gradient} rounded-full blur-3xl transform translate-x-20 -translate-y-20 animate-spin-slow`}
-                    ></div>
-                    <div
-                        className={`absolute bottom-0 left-0 w-32 h-32 ${theme.gradient} rounded-full blur-2xl transform -translate-x-16 translate-y-16`}
+                        className={`absolute top-0 right-0 w-24 h-24 ${theme.gradient} rounded-full blur-2xl transform translate-x-12 -translate-y-12`}
                     ></div>
                 </div>
 
                 {/* Content */}
-                <div className="relative z-10 p-6 md:p-8">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                        {/* Left Content */}
-                        <div className="flex-1">
-                            <div className="flex items-center gap-4 mb-4">
-                                {/* User Avatar */}
-                                <div
-                                    className={`w-16 h-16 ${theme.iconColor} rounded-2xl flex items-center justify-center text-2xl shadow-lg animate-bounce-gentle`}
-                                >
-                                    {userAvatar}
-                                </div>
+                <div className="relative flex items-center justify-between">
+                    {/* Left: Greeting */}
+                    <div className="flex items-center gap-4">
+                        {/* User Avatar */}
+                        <div
+                            className={`w-12 h-12 ${theme.iconColor} rounded-xl flex items-center justify-center text-white text-xl shadow-sm`}
+                        >
+                            {userAvatar}
+                        </div>
 
-                                {/* Greeting Content */}
-                                <div>
-                                    <h1 className="text-3xl md:text-4xl font-bold text-graphite leading-tight animate-fade-in-up">
-                                        {theme.greeting},{" "}
-                                        {userName || "Creator"}!
-                                        <span className="inline-block animate-bounce-gentle ml-2">
-                                            {theme.emoji}
-                                        </span>
-                                    </h1>
-                                    <p
-                                        className={`text-lg ${theme.accentColor} font-medium mt-1 animate-slide-in-right`}
-                                    >
-                                        {theme.description}
-                                    </p>
-                                </div>
-                            </div>
-
+                        {/* Greeting Text */}
+                        <div>
+                            <h1 className="text-xl font-bold text-graphite leading-tight">
+                                {theme.greeting}, {userName || "Creator"}!
+                                <span className="ml-2">{theme.emoji}</span>
+                            </h1>
                             <p
-                                className="text-slate text-lg leading-relaxed max-w-2xl animate-fade-in-up"
-                                style={{ animationDelay: "0.2s" }}
+                                className={`text-sm ${theme.accentColor} font-medium`}
                             >
-                                Welcome to your{" "}
-                                <span className="font-semibold text-graphite">
-                                    Token Command Center
-                                </span>
-                                . What would you like to build today?
+                                {theme.description}
                             </p>
                         </div>
+                    </div>
 
-                        {/* Status Badges */}
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                            {/* Token Count Badge */}
-                            <div className="group/badge">
-                                <div
-                                    className={`px-6 py-3 rounded-xl border backdrop-blur-sm shadow-level-1 hover:shadow-level-2 transition-all duration-300 transform hover:scale-105 ${getStatusBadgeColor(
-                                        tokenCount
-                                    )}`}
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 bg-white/50 rounded-lg flex items-center justify-center">
-                                                <span className="text-lg">
-                                                    📊
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <div className="text-sm font-medium opacity-75">
-                                                    Tokens Managed
-                                                </div>
-                                                <div className="text-xl font-bold">
-                                                    {tokenCount}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                    {/* Right: User Stats */}
+                    <div className="flex items-center gap-4">
+                        {/* EGLD Balance */}
+                        {account?.address && (
+                            <div className="text-center">
+                                <div className="text-lg font-bold text-graphite">
+                                    {egldBalance} EGLD
+                                </div>
+                                <div className="text-xs text-slate">
+                                    Balance
                                 </div>
                             </div>
+                        )}
 
-                            {/* Network Status Badge */}
-                            <div className="group/badge">
-                                <div
-                                    className={`px-6 py-3 rounded-xl border backdrop-blur-sm shadow-level-1 hover:shadow-level-2 transition-all duration-300 transform hover:scale-105 ${getNetworkStatusColor(
-                                        networkName
-                                    )}`}
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex items-center gap-2">
-                                            <div className="relative">
-                                                <div className="w-3 h-3 bg-manage-500 rounded-full animate-pulse"></div>
-                                                <div className="absolute inset-0 w-3 h-3 bg-manage-500 rounded-full animate-ping opacity-30"></div>
-                                            </div>
-                                            <div>
-                                                <div className="text-sm font-medium opacity-75">
-                                                    Network
-                                                </div>
-                                                <div className="text-lg font-bold">
-                                                    {networkName}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        {/* Divider */}
+                        {account?.address && (
+                            <div className="w-px h-8 bg-ash/30"></div>
+                        )}
+
+                        {/* Tokens */}
+                        <div className="text-center">
+                            <div className="text-lg font-bold text-graphite">
+                                {tokenCount}
                             </div>
+                            <div className="text-xs text-slate">
+                                Token{tokenCount !== 1 ? "s" : ""}
+                            </div>
+                        </div>
+
+                        {/* Network Status */}
+                        <div
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium ${getNetworkStatusColor(
+                                networkName
+                            )}`}
+                        >
+                            <div className="w-2 h-2 bg-manage-500 rounded-full animate-pulse"></div>
+                            {networkName}
                         </div>
                     </div>
                 </div>
 
-                {/* Decorative Corner Elements */}
-                <div className="absolute top-4 right-4 opacity-30">
-                    <div className="flex gap-2">
-                        <div
-                            className={`w-2 h-2 ${theme.iconColor} rounded-full animate-ping`}
-                        ></div>
-                        <div
-                            className={`w-1 h-1 ${theme.iconColor} rounded-full animate-pulse`}
-                            style={{ animationDelay: "0.5s" }}
-                        ></div>
+                {/* Account Address (if connected) */}
+                {account?.address && (
+                    <div className="mt-4 pt-4 border-t border-white/30">
+                        <div className="flex items-center justify-between text-xs">
+                            <div className="flex items-center gap-2 text-slate">
+                                <span>💼</span>
+                                <span>Connected Wallet:</span>
+                                <code className="bg-white/50 px-2 py-1 rounded font-mono">
+                                    {account.address}
+                                </code>
+                            </div>
+                            <div className="flex items-center gap-2 text-slate">
+                                <span>🔄</span>
+                                <span>Nonce: {account.nonce}</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
-            {/* Time-based Motivational Message */}
-            <div
-                className="mt-4 flex items-center justify-center animate-fade-in-up"
-                style={{ animationDelay: "0.4s" }}
-            >
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl px-6 py-3 border border-white/50 shadow-level-1 max-w-md">
-                    <div className="flex items-center gap-3 text-sm">
-                        <span className="text-xl">{theme.emoji}</span>
-                        <div>
-                            <span className="font-medium text-graphite">
-                                {hour < 12 && "Rise and grind! "}
-                                {hour >= 12 && hour < 17 && "Keep building! "}
-                                {hour >= 17 && "Evening inspiration: "}
-                            </span>
-                            <span className="text-slate">
-                                {tokenCount === 0 &&
-                                    "Your first token is just minutes away"}
-                                {tokenCount > 0 &&
-                                    tokenCount < 3 &&
-                                    "You're building momentum perfectly"}
-                                {tokenCount >= 3 &&
-                                    "You're inspiring others to create"}
-                            </span>
-                        </div>
+            {/* Time-based Motivational Message - Keeping your favorite feature! */}
+            <div className="mt-3 flex justify-center">
+                <div className="bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/50 shadow-sm">
+                    <div className="flex items-center gap-2 text-sm">
+                        <span>{theme.emoji}</span>
+                        <span className="font-medium text-graphite">
+                            {hour < 12 && "Rise and build! "}
+                            {hour >= 12 && hour < 17 && "Keep going! "}
+                            {hour >= 17 && "Evening vibes: "}
+                        </span>
+                        <span className="text-slate">
+                            {tokenCount === 0 && "Your first token awaits"}
+                            {tokenCount > 0 &&
+                                tokenCount < 3 &&
+                                "You're gaining momentum"}
+                            {tokenCount >= 3 && "You're inspiring others"}
+                        </span>
                     </div>
                 </div>
             </div>

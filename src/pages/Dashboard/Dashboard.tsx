@@ -4,18 +4,13 @@ import UserJourneyBanner from "./components/UserJourneyBanner";
 import { QuickActionsGrid } from "./components/QuickActions";
 import { TokenPortfolio } from "./components/TokenPortfolio";
 import type { Token } from "./components/TokenPortfolio";
-import {
-    LearningProgress,
-    CommunityHighlights,
-    PlatformStats,
-} from "./components/Sidebar";
+import { LearningProgress } from "./components/Sidebar";
 
 // Enhanced Dashboard Components
 import RecentActivity from "./components/RecentActivity";
 import EducationalSpotlight from "./components/EducationalSpotlight";
-import PlatformAnnouncements from "./components/PlatformAnnouncements";
 
-// Types for the new components
+// Types for the remaining components
 interface Activity {
     id: number;
     type: string;
@@ -38,16 +33,7 @@ interface EducationalContent {
     route: string;
 }
 
-interface Announcement {
-    id: number;
-    title: string;
-    description: string;
-    type: "feature" | "education" | "network" | "community";
-    timestamp: string;
-    priority: "high" | "medium" | "low";
-}
-
-// Mock data for enhanced dashboard
+// Mock data for user-focused dashboard
 const mockTokens: Token[] = [
     {
         id: "1",
@@ -89,49 +75,6 @@ const mockLearningProgress = {
         "Token Management Fundamentals ✓",
         "Introduction to DEX Liquidity ✓",
     ],
-};
-
-const mockCommunityHighlights = [
-    {
-        id: 1,
-        title: "🎨 Digital Artist Creates Fan Token for 10K Community",
-        description:
-            "Sarah M. successfully distributed 100K tokens to her art community, enabling exclusive content access and voting rights.",
-        category: "Creator Success",
-        timestamp: "2 hours ago",
-        engagement: "245 likes • 32 comments",
-    },
-    {
-        id: 2,
-        title: "🚀 Local Coffee Shop Launches Loyalty Token",
-        description:
-            "Bean & Brew Coffee created a loyalty token system, increasing customer retention by 40% in just 2 weeks.",
-        category: "Business Innovation",
-        timestamp: "5 hours ago",
-        engagement: "189 likes • 28 comments",
-    },
-    {
-        id: 3,
-        title: "🌟 Gaming Community Raises $50K Through Token Launch",
-        description:
-            "Pixel Warriors DAO used SimpliFi to launch their governance token, funding their next game development cycle.",
-        category: "Community Win",
-        timestamp: "1 day ago",
-        engagement: "412 likes • 67 comments",
-    },
-];
-
-const mockPlatformStats = {
-    tokensCreated: "15,847+",
-    activeCreators: "4,230+",
-    totalAirdrops: "12,450+",
-    liquidityAdded: "$2.8M+",
-    weeklyGrowth: {
-        tokens: "+12%",
-        creators: "+8%",
-        airdrops: "+15%",
-        liquidity: "+22%",
-    },
 };
 
 const mockRecentActivity: Activity[] = [
@@ -184,36 +127,6 @@ const mockEducationalSpotlight: EducationalContent = {
     route: "/app/education/tokenomics",
 };
 
-const mockAnnouncements: Announcement[] = [
-    {
-        id: 1,
-        title: "🎉 New Feature: Batch Token Management",
-        description:
-            "Manage multiple tokens simultaneously with our new batch operations interface.",
-        type: "feature",
-        timestamp: "1 day ago",
-        priority: "high",
-    },
-    {
-        id: 2,
-        title: "📚 Educational Series: DeFi Fundamentals",
-        description:
-            "Join our 5-part educational series covering DeFi basics, starting next week.",
-        type: "education",
-        timestamp: "2 days ago",
-        priority: "medium",
-    },
-    {
-        id: 3,
-        title: "⚡ Network Update: Reduced Transaction Fees",
-        description:
-            "MultiversX network upgrade has reduced average transaction costs by 30%.",
-        type: "network",
-        timestamp: "1 week ago",
-        priority: "low",
-    },
-];
-
 export default function Dashboard() {
     return (
         <div className="p-6 md:p-8 bg-app-canvas min-h-screen">
@@ -230,37 +143,29 @@ export default function Dashboard() {
             <QuickActionsGrid tokenCount={mockTokens.length} />
 
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 mb-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
                 {/* Primary Content - Token Portfolio */}
-                <div className="xl:col-span-2">
+                <div>
                     <TokenPortfolio tokens={mockTokens} />
                 </div>
 
                 {/* Secondary Content - Recent Activity */}
-                <div className="xl:col-span-2">
+                <div>
                     <RecentActivity activities={mockRecentActivity} />
                 </div>
             </div>
 
-            {/* Educational & Community Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                {/* Educational Spotlight */}
-                <EducationalSpotlight content={mockEducationalSpotlight} />
+            {/* Educational & Learning Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Learning Progress - Takes 2 columns for priority */}
+                <div className="lg:col-span-2 flex">
+                    <LearningProgress data={mockLearningProgress} />
+                </div>
 
-                {/* Platform Announcements */}
-                <PlatformAnnouncements announcements={mockAnnouncements} />
-            </div>
-
-            {/* Bottom Grid - Community & Stats */}
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                {/* Learning Progress */}
-                <LearningProgress data={mockLearningProgress} />
-
-                {/* Community Highlights */}
-                <CommunityHighlights highlights={mockCommunityHighlights} />
-
-                {/* Platform Stats */}
-                <PlatformStats data={mockPlatformStats} />
+                {/* Educational Spotlight - Takes 1 column */}
+                <div className="flex">
+                    <EducationalSpotlight content={mockEducationalSpotlight} />
+                </div>
             </div>
         </div>
     );
