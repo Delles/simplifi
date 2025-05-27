@@ -5,11 +5,13 @@ import { InfoTooltip } from "../shared";
 interface DefineLiquidityProps {
     lpData: LPData;
     onInputChange: (field: keyof LPData, value: unknown) => void;
+    onOpenRiskModal?: () => void;
 }
 
 export const DefineLiquidity: React.FC<DefineLiquidityProps> = ({
     lpData,
     onInputChange,
+    onOpenRiskModal,
 }) => {
     const [tokenAAmount, setTokenAAmount] = useState(
         lpData.tokenA?.amount || ""
@@ -196,7 +198,6 @@ export const DefineLiquidity: React.FC<DefineLiquidityProps> = ({
                     />
                 </div>
             </div>
-
             {/* Token Pair Summary */}
             <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl"></div>
@@ -235,7 +236,6 @@ export const DefineLiquidity: React.FC<DefineLiquidityProps> = ({
                     </div>
                 </div>
             </div>
-
             {/* Amount Input Section */}
             <div className="space-y-6">
                 <h3 className="text-h4 font-bold text-graphite mb-2">
@@ -332,7 +332,6 @@ export const DefineLiquidity: React.FC<DefineLiquidityProps> = ({
                     </div>
                 </div>
             </div>
-
             {/* Price Calculation Section */}
             {pricePerTokenA && (
                 <div className="relative">
@@ -374,7 +373,6 @@ export const DefineLiquidity: React.FC<DefineLiquidityProps> = ({
                     </div>
                 </div>
             )}
-
             {/* Warnings Section */}
             {warnings.length > 0 && (
                 <div className="relative">
@@ -413,7 +411,6 @@ export const DefineLiquidity: React.FC<DefineLiquidityProps> = ({
                     </div>
                 </div>
             )}
-
             {/* Educational Tips */}
             <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl"></div>
@@ -470,8 +467,53 @@ export const DefineLiquidity: React.FC<DefineLiquidityProps> = ({
                     </div>
                 </div>
             </div>
-
-            {/* Summary Stats */}
+            {/* Risk Acknowledgment Section */}{" "}
+            {tokenAAmount && tokenBAmount && onOpenRiskModal && (
+                <div className="relative">
+                    {" "}
+                    <div className="absolute inset-0 bg-gradient-to-br from-distribute-primary/10 to-red-50 rounded-3xl"></div>{" "}
+                    <div className="relative backdrop-blur-sm bg-white/90 rounded-3xl p-6 border border-distribute-primary/20 shadow-level-2">
+                        {" "}
+                        <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+                            {" "}
+                            <div className="flex items-center gap-4">
+                                {" "}
+                                <div className="w-12 h-12 bg-gradient-to-br from-distribute-primary to-red-500 rounded-xl flex items-center justify-center text-2xl text-white shadow-level-2">
+                                    {" "}
+                                    ⚠️{" "}
+                                </div>{" "}
+                                <div>
+                                    {" "}
+                                    <h4 className="text-lg font-bold text-distribute-primary mb-1">
+                                        {" "}
+                                        Review Risks Before Proceeding{" "}
+                                    </h4>{" "}
+                                    <p className="text-slate text-sm">
+                                        {" "}
+                                        {lpData.riskAcknowledged
+                                            ? "✅ Risks acknowledged - ready to proceed"
+                                            : "Please review and acknowledge all risks associated with liquidity provision"}{" "}
+                                    </p>{" "}
+                                </div>{" "}
+                            </div>{" "}
+                            <button
+                                onClick={onOpenRiskModal}
+                                className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                                    lpData.riskAcknowledged
+                                        ? "bg-emerald-green/10 text-emerald-green border border-emerald-green/20 hover:bg-emerald-green/20"
+                                        : "bg-distribute-primary text-white hover:bg-distribute-secondary shadow-level-1 hover:shadow-level-2"
+                                }`}
+                            >
+                                {" "}
+                                {lpData.riskAcknowledged
+                                    ? "Review Risks Again"
+                                    : "Review & Acknowledge Risks"}{" "}
+                            </button>{" "}
+                        </div>{" "}
+                    </div>{" "}
+                </div>
+            )}
+            {/* Summary Stats */}{" "}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
                     {

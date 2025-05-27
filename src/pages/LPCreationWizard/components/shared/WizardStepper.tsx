@@ -27,11 +27,14 @@ export const WizardStepper: React.FC<WizardStepperProps> = ({
 }) => {
     return (
         <div className="mb-8">
-            {/* Progress Bar */}
+            {/* Simplified Progress Bar */}
             <div className="relative mb-6">
-                <div className="absolute top-5 left-0 w-full h-0.5 bg-ash"></div>
+                {/* Background line */}
+                <div className="absolute top-5 left-0 w-full h-0.5 bg-ash/30"></div>
+
+                {/* Progress line */}
                 <div
-                    className="absolute top-5 left-0 h-0.5 bg-gradient-to-r from-distribute-500 to-amber-500 transition-all duration-500 ease-out"
+                    className="absolute top-5 left-0 h-0.5 bg-gradient-to-r from-theme-blue to-theme-blue-dark transition-all duration-500 ease-out"
                     style={{
                         width: `${
                             ((currentStep - 1) / (totalSteps - 1)) * 100
@@ -39,6 +42,7 @@ export const WizardStepper: React.FC<WizardStepperProps> = ({
                     }}
                 ></div>
 
+                {/* Step indicators */}
                 <div className="relative flex justify-between">
                     {steps.map((step, index) => {
                         const stepNumber = index + 1;
@@ -50,87 +54,55 @@ export const WizardStepper: React.FC<WizardStepperProps> = ({
                                 key={index}
                                 className="flex flex-col items-center"
                             >
+                                {/* Step circle */}
                                 <div
                                     className={`
-                                        w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm font-semibold transition-all duration-300
+                                        w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm font-semibold transition-all duration-300 shadow-level-1
                                         ${
                                             isCompleted
-                                                ? "bg-distribute-500 border-distribute-500 text-white"
+                                                ? "bg-theme-blue border-theme-blue text-white"
                                                 : isCurrent
-                                                ? "bg-white border-distribute-500 text-distribute-500 shadow-lg"
+                                                ? "bg-white border-theme-blue text-theme-blue ring-2 ring-theme-blue/20"
                                                 : "bg-white border-ash text-slate"
                                         }
                                     `}
                                 >
                                     {isCompleted ? "✓" : stepNumber}
                                 </div>
-                                <div className="text-center mt-2 max-w-[120px]">
-                                    <div
-                                        className={`text-sm font-medium ${
-                                            isCurrent
-                                                ? "text-distribute-600"
-                                                : isCompleted
-                                                ? "text-graphite"
-                                                : "text-slate"
-                                        }`}
-                                    >
-                                        {step.title}
+
+                                {/* Minimal step label - only show for current/completed */}
+                                {(isCurrent || isCompleted) && (
+                                    <div className="text-center mt-2 max-w-[100px]">
+                                        <div
+                                            className={`text-xs font-medium transition-all duration-300 ${
+                                                isCurrent
+                                                    ? "text-theme-blue"
+                                                    : "text-graphite"
+                                            }`}
+                                        >
+                                            {step.title}
+                                        </div>
                                     </div>
-                                    <div className="text-xs text-slate mt-1">
-                                        {step.description}
-                                    </div>
-                                </div>
+                                )}
                             </div>
                         );
                     })}
                 </div>
             </div>
 
-            {/* Current Step Info */}
-            <div className="bg-gradient-to-r from-distribute-50 to-amber-50 rounded-xl p-4 border border-distribute-200">
-                <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-distribute-500 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
-                        {currentStep}
-                    </div>
-                    <div className="flex-1">
-                        <h3 className="font-semibold text-graphite mb-1">
-                            {steps[currentStep - 1]?.title}
-                        </h3>
-                        <p className="text-sm text-slate mb-2">
-                            {steps[currentStep - 1]?.educationalNote}
-                        </p>
-                        {validation && (
-                            <div className="flex items-center gap-2 text-sm">
-                                {validation.isValid ? (
-                                    <>
-                                        <span className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">
-                                            ✓
-                                        </span>
-                                        <span className="text-green-700">
-                                            {validation.message}
-                                        </span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <span className="w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center text-white text-xs">
-                                            !
-                                        </span>
-                                        <span className="text-amber-700">
-                                            {validation.message}
-                                        </span>
-                                        {validation.missing.length > 0 && (
-                                            <span className="text-slate">
-                                                - Missing:{" "}
-                                                {validation.missing.join(", ")}
-                                            </span>
-                                        )}
-                                    </>
-                                )}
-                            </div>
-                        )}
+            {/* Minimal validation indicator - only show if there are issues */}
+            {validation && !validation.isValid && (
+                <div className="bg-distribute-primary/5 border border-distribute-primary/20 rounded-lg p-3 mb-4">
+                    <div className="flex items-center gap-2 text-sm">
+                        <div className="w-4 h-4 bg-distribute-primary rounded-full flex items-center justify-center text-white text-xs">
+                            !
+                        </div>
+                        <span className="text-distribute-primary font-medium">
+                            {validation.message}
+                        </span>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

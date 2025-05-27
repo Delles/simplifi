@@ -1,6 +1,6 @@
 import React from "react";
 import type { LPData } from "../Introduction";
-import { InfoTooltip } from "../shared";
+import { InfoTooltip, CollapsibleCard } from "../shared";
 
 interface ChoosePairingTokenProps {
     lpData: LPData;
@@ -92,13 +92,13 @@ export const ChoosePairingToken: React.FC<ChoosePairingTokenProps> = ({
     const getRiskColor = (risk: string) => {
         switch (risk) {
             case "low":
-                return "text-green-600 bg-green-100";
+                return "text-emerald-green bg-emerald-green/10";
             case "medium":
-                return "text-amber-600 bg-amber-100";
+                return "text-distribute-primary bg-distribute-primary/10";
             case "high":
                 return "text-red-600 bg-red-100";
             default:
-                return "text-slate-600 bg-slate-100";
+                return "text-slate bg-slate/10";
         }
     };
 
@@ -108,29 +108,92 @@ export const ChoosePairingToken: React.FC<ChoosePairingTokenProps> = ({
     );
     const otherTokens = mockPairingTokens.filter((token) => !token.recommended);
 
-    return (
-        <div className="space-y-8">
-            {/* Hero Section */}
-            <div className="text-center">
-                <div className="relative mb-6">
-                    {/* Animated Background Glow */}
-                    <div className="absolute inset-0 w-20 h-20 mx-auto bg-gradient-to-br from-distribute-400/30 to-amber-400/30 rounded-full blur-lg animate-pulse-gentle"></div>
+    const TokenCard = ({
+        token,
+        isRecommended = false,
+    }: {
+        token: (typeof mockPairingTokens)[0];
+        isRecommended?: boolean;
+    }) => {
+        const isSelected = lpData.tokenB?.identifier === token.identifier;
 
-                    {/* Main Icon */}
-                    <div className="relative w-20 h-20 bg-gradient-to-br from-distribute-500 to-amber-500 rounded-3xl flex items-center justify-center text-4xl text-white mx-auto shadow-level-3 animate-bounce-gentle">
-                        🔗
+        return (
+            <div
+                onClick={() => handleTokenSelect(token)}
+                className={`
+                    group relative cursor-pointer transition-all duration-200 rounded-xl p-4 border
+                    ${
+                        isSelected
+                            ? "bg-theme-blue/5 border-theme-blue/30 shadow-level-1"
+                            : "bg-white border-ash/30 hover:bg-theme-blue/5 hover:border-theme-blue/20 hover:shadow-level-1"
+                    }
+                `}
+            >
+                <div className="flex items-center gap-4">
+                    {/* Token Icon */}
+                    <div className="w-12 h-12 bg-gradient-to-br from-theme-blue to-theme-blue-dark rounded-xl flex items-center justify-center text-2xl shadow-level-1 group-hover:scale-105 transition-transform duration-200">
+                        {token.icon}
                     </div>
 
-                    {/* Floating Particles */}
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-distribute-400 rounded-full animate-bounce opacity-60"></div>
-                    <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse opacity-40"></div>
+                    {/* Token Info */}
+                    <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                            <h4 className="font-semibold text-graphite">
+                                {token.name}
+                            </h4>
+                            <span className="px-2 py-1 bg-slate/10 text-slate text-xs rounded-md font-medium">
+                                {token.ticker}
+                            </span>
+                            {isRecommended && (
+                                <span className="px-2 py-1 bg-emerald-green/10 text-emerald-green text-xs rounded-md font-medium">
+                                    Recommended
+                                </span>
+                            )}
+                        </div>
+                        <p className="text-sm text-slate mb-2">
+                            {token.description}
+                        </p>
+                        <div className="flex items-center gap-4 text-xs">
+                            <span className="text-slate">
+                                Balance:{" "}
+                                {formatBalance(token.balance, token.decimals)}{" "}
+                                {token.ticker}
+                            </span>
+                            <span
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(
+                                    token.riskLevel
+                                )}`}
+                            >
+                                {token.riskLevel} risk
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Selection Indicator */}
+                    <div
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                            isSelected
+                                ? "bg-theme-blue border-theme-blue text-white"
+                                : "border-ash group-hover:border-theme-blue"
+                        }`}
+                    >
+                        {isSelected && <span className="text-xs">✓</span>}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <div className="space-y-8">
+            {/* Hero Section - Simplified */}
+            <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-theme-blue to-theme-blue-dark rounded-2xl flex items-center justify-center text-3xl text-white mx-auto mb-6 shadow-level-2">
+                    🔗
                 </div>
 
-                <h2 className="text-h2 font-bold text-graphite mb-4 tracking-tight">
-                    Choose{" "}
-                    <span className="text-distribute-600 font-extrabold">
-                        Pairing Token
-                    </span>
+                <h2 className="text-h2 font-bold text-theme-blue mb-4">
+                    Choose Pairing Token
                 </h2>
                 <div className="flex items-center justify-center gap-3 text-body-lg text-slate max-w-2xl mx-auto">
                     <span>
@@ -145,528 +208,257 @@ export const ChoosePairingToken: React.FC<ChoosePairingTokenProps> = ({
                 </div>
             </div>
 
-            {/* Selected Token A Summary */}
+            {/* Token Pair Preview */}
             {lpData.tokenA && (
-                <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl"></div>
-
-                    <div className="relative backdrop-blur-sm bg-white/90 rounded-3xl p-6 border border-blue-200/60 shadow-level-2">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold shadow-level-2">
+                <div className="bg-theme-blue/5 border border-theme-blue/20 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-theme-blue to-theme-blue-dark rounded-lg flex items-center justify-center text-white font-bold shadow-level-1">
                                 A
                             </div>
                             <div>
-                                <h4 className="text-lg font-bold text-blue-800">
-                                    Your Token (Token A)
+                                <h4 className="font-semibold text-theme-blue">
+                                    {lpData.tokenA.name}
                                 </h4>
-                                <p className="text-blue-600 text-sm">
-                                    <span className="font-semibold">
-                                        {lpData.tokenA.name}
-                                    </span>
-                                    <span className="text-slate mx-2">•</span>
-                                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
-                                        {lpData.tokenA.ticker}
-                                    </span>
+                                <p className="text-sm text-slate">
+                                    {lpData.tokenA.ticker}
                                 </p>
+                            </div>
+                        </div>
+
+                        <div className="text-2xl text-slate">⇄</div>
+
+                        <div className="flex items-center gap-3">
+                            <div>
+                                <h4 className="font-semibold text-theme-blue text-right">
+                                    {lpData.tokenB
+                                        ? lpData.tokenB.name
+                                        : "Select Token B"}
+                                </h4>
+                                <p className="text-sm text-slate text-right">
+                                    {lpData.tokenB
+                                        ? lpData.tokenB.ticker
+                                        : "Choose pairing token"}
+                                </p>
+                            </div>
+                            <div className="w-10 h-10 bg-gradient-to-br from-emerald-green to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold shadow-level-1">
+                                {lpData.tokenB ? "B" : "?"}
                             </div>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* Recommended Pairing Tokens */}
-            <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                        <h3 className="text-h4 font-bold text-graphite mb-2 flex items-center gap-2">
-                            <span className="text-2xl">⭐</span>
-                            Recommended Pairing Tokens
-                        </h3>
-                        <p className="text-body-secondary text-slate">
-                            These tokens provide the best liquidity and trading
-                            volume
-                        </p>
-                    </div>
-                </div>
-
-                <div className="grid gap-4">
-                    {recommendedTokens.map((token, index) => {
-                        const isSelected =
-                            lpData.tokenB?.identifier === token.identifier;
-
-                        return (
-                            <div
-                                key={token.identifier}
-                                onClick={() => handleTokenSelect(token)}
-                                className={`
-                                    group relative cursor-pointer transition-all duration-300 ease-out
-                                    ${
-                                        isSelected
-                                            ? "scale-[1.02]"
-                                            : "hover:scale-[1.01]"
-                                    }
-                                `}
-                                style={{ animationDelay: `${index * 100}ms` }}
-                            >
-                                {/* Background Gradient for Selected State */}
-                                {isSelected && (
-                                    <div className="absolute inset-0 bg-gradient-to-r from-green-100/50 to-emerald-100/50 rounded-3xl blur-sm"></div>
-                                )}
-
-                                {/* Glass-morphism Card */}
-                                <div
-                                    className={`
-                                    relative backdrop-blur-sm rounded-3xl p-6 border shadow-level-2 transition-all duration-300
-                                    ${
-                                        isSelected
-                                            ? "bg-white/95 border-green-300 shadow-level-3"
-                                            : "bg-white/90 border-white/40 hover:bg-white/95 hover:border-green-200 hover:shadow-level-3"
-                                    }
-                                `}
-                                >
-                                    {/* Recommended Badge */}
-                                    <div className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                                        RECOMMENDED
-                                    </div>
-
-                                    {/* Selection Indicator */}
-                                    {isSelected && (
-                                        <div className="absolute top-4 right-4 w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-level-2 animate-bounce-gentle">
-                                            <span className="text-white text-sm font-bold">
-                                                ✓
-                                            </span>
-                                        </div>
-                                    )}
-
-                                    <div className="flex items-center gap-6 mt-8">
-                                        {/* Token Icon */}
-                                        <div className="relative flex-shrink-0">
-                                            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center text-3xl shadow-level-2 group-hover:scale-110 transition-transform duration-300">
-                                                {token.icon}
-                                            </div>
-
-                                            {/* Risk Badge */}
-                                            <div
-                                                className={`absolute -bottom-1 -right-1 px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(
-                                                    token.riskLevel
-                                                )}`}
-                                            >
-                                                {token.riskLevel}
-                                            </div>
-                                        </div>
-
-                                        {/* Token Info */}
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-3 mb-2">
-                                                <h4 className="text-lg font-bold text-graphite">
-                                                    {token.name}
-                                                </h4>
-                                                <span className="px-3 py-1 bg-ash/50 rounded-full text-sm text-slate font-medium">
-                                                    {token.ticker}
-                                                </span>
-                                            </div>
-
-                                            <p className="text-sm text-slate mb-3 leading-relaxed">
-                                                {token.description}
-                                            </p>
-
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-                                                <div>
-                                                    <span className="text-slate block">
-                                                        Your Balance
-                                                    </span>
-                                                    <span className="font-semibold text-graphite">
-                                                        {formatBalance(
-                                                            token.balance,
-                                                            token.decimals
-                                                        )}{" "}
-                                                        {token.ticker}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-slate block">
-                                                        Market Cap
-                                                    </span>
-                                                    <span className="font-semibold text-green-600">
-                                                        {token.marketCap}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-slate block">
-                                                        24h Volume
-                                                    </span>
-                                                    <span className="font-semibold text-blue-600">
-                                                        {token.volume24h}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-slate block">
-                                                        Type
-                                                    </span>
-                                                    <span className="font-semibold text-purple-600">
-                                                        {token.type}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Selection Arrow */}
-                                        <div
-                                            className={`flex-shrink-0 transition-all duration-300 ${
-                                                isSelected
-                                                    ? "text-green-500 scale-110"
-                                                    : "text-slate/50 group-hover:text-green-400 group-hover:scale-105"
-                                            }`}
-                                        >
-                                            <svg
-                                                className="w-6 h-6"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M9 5l7 7-7 7"
-                                                />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-
-            {/* Other Pairing Tokens */}
-            <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                        <h3 className="text-h4 font-bold text-graphite mb-2">
-                            Other Available Tokens
-                        </h3>
-                        <p className="text-body-secondary text-slate">
-                            Additional pairing options with potentially lower
-                            liquidity
-                        </p>
-                    </div>
-
-                    <div className="bg-amber-100 text-amber-700 px-4 py-2 rounded-full text-sm font-medium">
-                        {otherTokens.length} more available
-                    </div>
-                </div>
-
-                <div className="grid gap-4">
-                    {otherTokens.map((token, index) => {
-                        const isSelected =
-                            lpData.tokenB?.identifier === token.identifier;
-
-                        return (
-                            <div
-                                key={token.identifier}
-                                onClick={() => handleTokenSelect(token)}
-                                className={`
-                                    group relative cursor-pointer transition-all duration-300 ease-out
-                                    ${
-                                        isSelected
-                                            ? "scale-[1.02]"
-                                            : "hover:scale-[1.01]"
-                                    }
-                                `}
-                                style={{
-                                    animationDelay: `${
-                                        (index + recommendedTokens.length) * 100
-                                    }ms`,
-                                }}
-                            >
-                                {/* Background Gradient for Selected State */}
-                                {isSelected && (
-                                    <div className="absolute inset-0 bg-gradient-to-r from-distribute-100/50 to-amber-100/50 rounded-3xl blur-sm"></div>
-                                )}
-
-                                {/* Glass-morphism Card */}
-                                <div
-                                    className={`
-                                    relative backdrop-blur-sm rounded-3xl p-6 border shadow-level-2 transition-all duration-300
-                                    ${
-                                        isSelected
-                                            ? "bg-white/95 border-distribute-300 shadow-level-3"
-                                            : "bg-white/90 border-white/40 hover:bg-white/95 hover:border-distribute-200 hover:shadow-level-3"
-                                    }
-                                `}
-                                >
-                                    {/* Selection Indicator */}
-                                    {isSelected && (
-                                        <div className="absolute top-4 right-4 w-8 h-8 bg-gradient-to-r from-distribute-500 to-amber-500 rounded-full flex items-center justify-center shadow-level-2 animate-bounce-gentle">
-                                            <span className="text-white text-sm font-bold">
-                                                ✓
-                                            </span>
-                                        </div>
-                                    )}
-
-                                    <div className="flex items-center gap-6">
-                                        {/* Token Icon */}
-                                        <div className="relative flex-shrink-0">
-                                            <div className="w-14 h-14 bg-gradient-to-br from-slate-500 to-slate-600 rounded-2xl flex items-center justify-center text-2xl shadow-level-2 group-hover:scale-110 transition-transform duration-300">
-                                                {token.icon}
-                                            </div>
-
-                                            {/* Risk Badge */}
-                                            <div
-                                                className={`absolute -bottom-1 -right-1 px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(
-                                                    token.riskLevel
-                                                )}`}
-                                            >
-                                                {token.riskLevel}
-                                            </div>
-                                        </div>
-
-                                        {/* Token Info */}
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-3 mb-2">
-                                                <h4 className="text-lg font-bold text-graphite">
-                                                    {token.name}
-                                                </h4>
-                                                <span className="px-3 py-1 bg-ash/50 rounded-full text-sm text-slate font-medium">
-                                                    {token.ticker}
-                                                </span>
-                                            </div>
-
-                                            <p className="text-sm text-slate mb-3 leading-relaxed">
-                                                {token.description}
-                                            </p>
-
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-                                                <div>
-                                                    <span className="text-slate block">
-                                                        Your Balance
-                                                    </span>
-                                                    <span className="font-semibold text-graphite">
-                                                        {formatBalance(
-                                                            token.balance,
-                                                            token.decimals
-                                                        )}{" "}
-                                                        {token.ticker}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-slate block">
-                                                        Market Cap
-                                                    </span>
-                                                    <span className="font-semibold text-green-600">
-                                                        {token.marketCap}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-slate block">
-                                                        24h Volume
-                                                    </span>
-                                                    <span className="font-semibold text-blue-600">
-                                                        {token.volume24h}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-slate block">
-                                                        Type
-                                                    </span>
-                                                    <span className="font-semibold text-purple-600">
-                                                        {token.type}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Selection Arrow */}
-                                        <div
-                                            className={`flex-shrink-0 transition-all duration-300 ${
-                                                isSelected
-                                                    ? "text-distribute-500 scale-110"
-                                                    : "text-slate/50 group-hover:text-distribute-400 group-hover:scale-105"
-                                            }`}
-                                        >
-                                            <svg
-                                                className="w-6 h-6"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M9 5l7 7-7 7"
-                                                />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-
-            {/* Selected Token Summary */}
+            {/* Current Selection Display */}
             {lpData.tokenB && (
-                <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-50 via-emerald-100/50 to-green-50 rounded-3xl blur-sm"></div>
+                <div className="bg-emerald-green/5 border border-emerald-green/20 rounded-xl p-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-emerald-green to-emerald-600 rounded-lg flex items-center justify-center text-white text-lg shadow-level-1">
+                            {lpData.tokenB.icon}
+                        </div>
+                        <div className="flex-1">
+                            <h4 className="font-semibold text-emerald-green">
+                                Selected: {lpData.tokenB.name}
+                            </h4>
+                            <p className="text-sm text-slate">
+                                Balance:{" "}
+                                {formatBalance(
+                                    lpData.tokenB.balance,
+                                    lpData.tokenB.decimals
+                                )}{" "}
+                                {lpData.tokenB.ticker}
+                            </p>
+                        </div>
+                        <div className="w-8 h-8 bg-emerald-green rounded-lg flex items-center justify-center text-white">
+                            ✓
+                        </div>
+                    </div>
+                </div>
+            )}
 
-                    <div className="relative backdrop-blur-md bg-white/95 rounded-3xl p-6 border border-white/50 shadow-level-3 animate-fade-in-up">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center text-white font-bold shadow-level-2 animate-bounce-gentle">
-                                ✓
-                            </div>
+            {/* Recommended Tokens */}
+            <CollapsibleCard
+                title="Recommended Pairing Tokens"
+                icon="⭐"
+                variant="success"
+                defaultExpanded={!lpData.tokenB}
+                badge="Best liquidity"
+            >
+                <div className="space-y-3">
+                    <p className="text-slate text-sm mb-4">
+                        These tokens provide the best liquidity and trading
+                        volume for your pool.
+                    </p>
+                    {recommendedTokens.map((token) => (
+                        <TokenCard
+                            key={token.identifier}
+                            token={token}
+                            isRecommended={true}
+                        />
+                    ))}
+                </div>
+            </CollapsibleCard>
 
-                            <div className="flex-1">
-                                <h4 className="text-lg font-bold text-green-700 mb-1">
-                                    Selected Pairing Token (Token B)
-                                </h4>
-                                <p className="text-green-600 text-sm">
-                                    <span className="font-semibold">
+            {/* Other Available Tokens */}
+            <CollapsibleCard
+                title="Other Available Tokens"
+                icon="💼"
+                variant="secondary"
+                defaultExpanded={false}
+                badge={`${otherTokens.length} tokens`}
+            >
+                <div className="space-y-3">
+                    <p className="text-slate text-sm mb-4">
+                        Additional pairing options with varying liquidity
+                        levels.
+                    </p>
+                    {otherTokens.map((token) => (
+                        <TokenCard key={token.identifier} token={token} />
+                    ))}
+                </div>
+            </CollapsibleCard>
+
+            {/* Token Details - Only show if token is selected */}
+            {lpData.tokenB && (
+                <CollapsibleCard
+                    title="Pairing Token Details"
+                    icon="📊"
+                    variant="primary"
+                    defaultExpanded={false}
+                >
+                    <div className="space-y-4">
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="space-y-3">
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Token Name:
+                                    </span>
+                                    <span className="font-medium text-graphite text-sm">
                                         {lpData.tokenB.name}
                                     </span>
-                                    <span className="text-slate mx-2">•</span>
-                                    <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Ticker:
+                                    </span>
+                                    <span className="font-medium text-graphite text-sm">
                                         {lpData.tokenB.ticker}
                                     </span>
-                                    <span className="text-slate mx-2">•</span>
-                                    <span className="text-sm">
-                                        Ready for liquidity setup
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Type:
                                     </span>
-                                </p>
+                                    <span className="font-medium text-graphite text-sm">
+                                        {lpData.tokenB.type}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Risk Level:
+                                    </span>
+                                    <span
+                                        className={`px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(
+                                            lpData.tokenB.riskLevel || "low"
+                                        )}`}
+                                    >
+                                        {" "}
+                                        {lpData.tokenB.riskLevel}
+                                    </span>
+                                </div>
                             </div>
-
-                            <div className="text-green-500 animate-pulse">
-                                <svg
-                                    className="w-6 h-6"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                                    />
-                                </svg>
+                            <div className="space-y-3">
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Market Cap:
+                                    </span>
+                                    <span className="font-medium text-graphite text-sm">
+                                        {lpData.tokenB.marketCap}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        24h Volume:
+                                    </span>
+                                    <span className="font-medium text-graphite text-sm">
+                                        {lpData.tokenB.volume24h}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Your Balance:
+                                    </span>
+                                    <span className="font-medium text-graphite text-sm">
+                                        {formatBalance(
+                                            lpData.tokenB.balance,
+                                            lpData.tokenB.decimals
+                                        )}{" "}
+                                        {lpData.tokenB.ticker}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Decimals:
+                                    </span>
+                                    <span className="font-medium text-graphite text-sm">
+                                        {lpData.tokenB.decimals}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </CollapsibleCard>
             )}
 
-            {/* Educational Tips */}
-            <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl"></div>
-
-                <div className="relative backdrop-blur-sm bg-white/90 rounded-3xl p-8 border border-blue-200/60 shadow-level-2">
-                    <div className="flex flex-col lg:flex-row items-start gap-6">
-                        <div className="flex-shrink-0">
-                            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center text-3xl text-white shadow-level-2">
-                                💡
-                            </div>
-                        </div>
-
-                        <div className="flex-1">
-                            <h4 className="text-h4 font-bold text-blue-800 mb-4">
-                                Pairing Token Selection Guide
-                            </h4>
-
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {[
-                                    {
-                                        icon: "🌟",
-                                        tip: "EGLD pairs offer the highest trading volume and best price discovery",
-                                    },
-                                    {
-                                        icon: "💵",
-                                        tip: "USDC pairs provide price stability and are preferred for stablecoins",
-                                    },
-                                    {
-                                        icon: "⚡",
-                                        tip: "Consider the target market and expected trading patterns",
-                                    },
-                                    {
-                                        icon: "📊",
-                                        tip: "Higher market cap tokens typically provide better liquidity depth",
-                                    },
-                                ].map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex items-start gap-3 group/tip"
-                                        style={{
-                                            animationDelay: `${index * 100}ms`,
-                                        }}
-                                    >
-                                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-lg group-hover/tip:scale-110 transition-transform duration-200 flex-shrink-0 mt-0.5">
-                                            {item.icon}
-                                        </div>
-                                        <p className="text-blue-700 text-sm leading-relaxed">
-                                            {item.tip}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[
-                    {
-                        label: "Available Pairs",
-                        value: mockPairingTokens.length.toString(),
-                        icon: "🔗",
-                        color: "from-blue-500 to-blue-600",
-                    },
-                    {
-                        label: "Recommended",
-                        value: recommendedTokens.length.toString(),
-                        icon: "⭐",
-                        color: "from-green-500 to-green-600",
-                    },
-                    {
-                        label: "Next Step",
-                        value: lpData.tokenB ? "Set Amounts" : "Select Pair",
-                        icon: "➡️",
-                        color: "from-amber-500 to-orange-600",
-                    },
-                ].map((stat, index) => (
-                    <div
-                        key={index}
-                        className="relative group"
-                        style={{ animationDelay: `${index * 150}ms` }}
-                    >
+            {/* Pairing Strategy Tips */}
+            <CollapsibleCard
+                title="Pairing Strategy Tips"
+                icon="💡"
+                variant="secondary"
+                defaultExpanded={false}
+            >
+                <div className="space-y-3">
+                    {[
+                        {
+                            icon: "🌟",
+                            title: "EGLD Pairing",
+                            desc: "Best for maximum exposure and native ecosystem integration. High trading volume expected.",
+                        },
+                        {
+                            icon: "💵",
+                            title: "USDC Pairing",
+                            desc: "Stable value reference, good for price discovery and reduced volatility impact.",
+                        },
+                        {
+                            icon: "📊",
+                            title: "Volume Considerations",
+                            desc: "Higher market cap tokens typically provide better liquidity and trading volume.",
+                        },
+                        {
+                            icon: "⚖️",
+                            title: "Risk Assessment",
+                            desc: "Consider the correlation between your token and the pairing token for impermanent loss.",
+                        },
+                    ].map((tip, index) => (
                         <div
-                            className="absolute inset-0 bg-gradient-to-br opacity-5 rounded-2xl group-hover:opacity-10 transition-opacity duration-300"
-                            style={{
-                                backgroundImage: `linear-gradient(135deg, ${
-                                    stat.color.split(" ")[1]
-                                }, ${stat.color.split(" ")[3]})`,
-                            }}
-                        ></div>
-
-                        <div className="relative backdrop-blur-sm bg-white/80 rounded-2xl p-6 border border-white/40 shadow-card hover:shadow-card-hover transition-all duration-300 text-center group-hover:scale-105">
-                            <div
-                                className={`w-12 h-12 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center text-2xl mx-auto mb-3 shadow-sm group-hover:rotate-12 transition-transform duration-300`}
-                            >
-                                {stat.icon}
+                            key={index}
+                            className="flex items-start gap-3 p-3 bg-slate/5 rounded-lg"
+                        >
+                            <div className="w-8 h-8 bg-theme-blue/10 rounded-lg flex items-center justify-center text-lg flex-shrink-0">
+                                {tip.icon}
                             </div>
-                            <div className="text-2xl font-bold text-graphite mb-1">
-                                {stat.value}
-                            </div>
-                            <div className="text-sm text-slate">
-                                {stat.label}
+                            <div>
+                                <p className="font-semibold text-graphite text-sm mb-1">
+                                    {tip.title}
+                                </p>
+                                <p className="text-slate text-sm leading-relaxed">
+                                    {tip.desc}
+                                </p>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            </CollapsibleCard>
         </div>
     );
 };

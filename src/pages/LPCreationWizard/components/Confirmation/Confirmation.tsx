@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import type { LPData } from "../Introduction";
+import { CollapsibleCard } from "../shared";
 
 interface ConfirmationProps {
     lpData: LPData;
@@ -22,143 +23,330 @@ export const Confirmation: React.FC<ConfirmationProps> = ({
     };
 
     return (
-        <div className="text-center space-y-8">
-            {/* Success Animation */}
-            <div className="relative">
-                <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-5xl text-white mx-auto mb-6 animate-bounce shadow-level-3">
-                    🎉
+        <div className="space-y-8">
+            {/* Success Hero Section */}
+            <div className="text-center">
+                <div className="relative mb-6">
+                    <div className="w-20 h-20 bg-gradient-to-br from-emerald-green to-emerald-600 rounded-2xl flex items-center justify-center text-4xl text-white mx-auto shadow-level-2 animate-bounce">
+                        🎉
+                    </div>
+                    <div className="absolute inset-0 w-20 h-20 mx-auto bg-emerald-green/20 rounded-2xl animate-ping"></div>
                 </div>
-                <div className="absolute inset-0 w-24 h-24 mx-auto bg-green-500/20 rounded-full animate-ping"></div>
-            </div>
 
-            {/* Success Message */}
-            <div>
-                <h2 className="text-3xl font-bold text-graphite mb-3">
+                <h2 className="text-h2 font-bold text-emerald-green mb-4">
                     Pool Created Successfully!
                 </h2>
-                <p className="text-lg text-slate max-w-md mx-auto">
+                <p className="text-body-lg text-slate max-w-2xl mx-auto">
                     Your liquidity pool is now live on xExchange. Users can
                     start trading your token!
                 </p>
             </div>
 
             {/* Pool Summary */}
-            <div className="bg-gradient-to-r from-distribute-50 to-amber-50 rounded-2xl p-6 border border-distribute-200 max-w-md mx-auto">
-                <h3 className="font-semibold text-distribute-700 mb-4 flex items-center gap-2 justify-center">
-                    <span className="text-xl">🏊‍♂️</span>
-                    Your Liquidity Pool
-                </h3>
-                <div className="space-y-3 text-sm">
-                    <div className="flex justify-between items-center">
-                        <span className="text-slate">Token Pair:</span>
-                        <span className="font-medium text-graphite">
-                            {lpData.tokenA?.ticker} /{" "}
-                            {lpData.tokenB?.ticker || "TBD"}
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-slate">Token A Amount:</span>
-                        <span className="font-medium text-graphite">
-                            {lpData.tokenA?.amount || "0"}{" "}
-                            {lpData.tokenA?.ticker}
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-slate">Token B Amount:</span>
-                        <span className="font-medium text-graphite">
-                            {lpData.tokenB?.amount || "0"}{" "}
-                            {lpData.tokenB?.ticker}
-                        </span>
-                    </div>
-                    {lpData.estimatedLPTokens && (
-                        <div className="flex justify-between items-center pt-2 border-t border-distribute-200">
-                            <span className="text-slate">
-                                LP Tokens Received:
-                            </span>
-                            <span className="font-medium text-distribute-600">
-                                {lpData.estimatedLPTokens}
-                            </span>
+            <CollapsibleCard
+                title="Your Liquidity Pool"
+                icon="🏊‍♂️"
+                variant="success"
+                defaultExpanded={true}
+            >
+                <div className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {/* Token A */}
+                        <div className="space-y-3">
+                            <h4 className="font-semibold text-theme-blue">
+                                Token A
+                            </h4>
+                            <div className="bg-theme-blue/5 rounded-lg p-3">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-theme-blue to-theme-blue-dark rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                                        A
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-graphite">
+                                            {lpData.tokenA?.name}
+                                        </p>
+                                        <p className="text-sm text-slate">
+                                            {lpData.tokenA?.ticker}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-slate">
+                                    Amount:{" "}
+                                    <span className="font-medium text-graphite">
+                                        {lpData.tokenA?.amount || "0"}{" "}
+                                        {lpData.tokenA?.ticker}
+                                    </span>
+                                </p>
+                            </div>
                         </div>
-                    )}
-                </div>
-            </div>
 
-            {/* Transaction Hash */}
-            {transactionHash && (
-                <div className="bg-white rounded-xl p-4 border border-ash max-w-md mx-auto">
-                    <h4 className="font-semibold text-graphite mb-2">
-                        Transaction Hash
-                    </h4>
-                    <div className="flex items-center gap-2 p-2 bg-ash/20 rounded-lg">
-                        <code className="text-xs text-slate font-mono flex-1 overflow-hidden">
-                            {transactionHash}
-                        </code>
-                        <a
-                            href={explorerUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-distribute-600 hover:text-distribute-700 font-medium whitespace-nowrap"
-                        >
-                            View on Explorer ↗
-                        </a>
+                        {/* Token B */}
+                        <div className="space-y-3">
+                            <h4 className="font-semibold text-emerald-green">
+                                Token B
+                            </h4>
+                            <div className="bg-emerald-green/5 rounded-lg p-3">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-green to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                                        B
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-graphite">
+                                            {lpData.tokenB?.name}
+                                        </p>
+                                        <p className="text-sm text-slate">
+                                            {lpData.tokenB?.ticker}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-slate">
+                                    Amount:{" "}
+                                    <span className="font-medium text-graphite">
+                                        {lpData.tokenB?.amount || "0"}{" "}
+                                        {lpData.tokenB?.ticker}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Pool Stats */}
+                    <div className="grid md:grid-cols-3 gap-4 pt-4 border-t border-ash/20">
+                        <div className="text-center">
+                            <p className="text-sm text-slate mb-1">
+                                Token Pair
+                            </p>
+                            <p className="font-semibold text-graphite">
+                                {lpData.tokenA?.ticker} /{" "}
+                                {lpData.tokenB?.ticker}
+                            </p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-sm text-slate mb-1">
+                                Initial Price
+                            </p>
+                            <p className="font-semibold text-graphite">
+                                {lpData.initialPrice} {lpData.tokenB?.ticker}
+                            </p>
+                            <p className="text-xs text-slate">
+                                per {lpData.tokenA?.ticker}
+                            </p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-sm text-slate mb-1">
+                                LP Tokens Received
+                            </p>
+                            <p className="font-semibold text-emerald-green">
+                                {lpData.estimatedLPTokens}
+                            </p>
+                        </div>
                     </div>
                 </div>
+            </CollapsibleCard>
+
+            {/* Transaction Details */}
+            {transactionHash && (
+                <CollapsibleCard
+                    title="Transaction Details"
+                    icon="📋"
+                    variant="primary"
+                    defaultExpanded={false}
+                >
+                    <div className="space-y-4">
+                        <div className="bg-theme-blue/5 rounded-lg p-4">
+                            <h4 className="font-semibold text-theme-blue mb-3">
+                                Transaction Hash
+                            </h4>
+                            <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-theme-blue/20">
+                                <code className="text-xs text-slate font-mono flex-1 overflow-hidden break-all">
+                                    {transactionHash}
+                                </code>
+                                <a
+                                    href={explorerUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-3 py-1 bg-theme-blue text-white text-xs rounded-md hover:bg-theme-blue-dark transition-colors whitespace-nowrap"
+                                >
+                                    View ↗
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="space-y-3">
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Network:
+                                    </span>
+                                    <span className="font-medium text-graphite text-sm">
+                                        MultiversX Mainnet
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Status:
+                                    </span>
+                                    <span className="font-medium text-emerald-green text-sm">
+                                        ✓ Confirmed
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Block:
+                                    </span>
+                                    <span className="font-medium text-graphite text-sm">
+                                        Latest
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate text-sm">
+                                        Function:
+                                    </span>
+                                    <span className="font-medium text-graphite text-sm">
+                                        createPair
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </CollapsibleCard>
             )}
 
-            {/* Next Steps */}
-            <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200 max-w-md mx-auto">
-                <h3 className="font-semibold text-blue-800 mb-3 flex items-center gap-2 justify-center">
-                    <span className="text-xl">🚀</span>
-                    What's Next?
-                </h3>
-                <ul className="text-sm text-blue-700 space-y-2 text-left">
-                    <li className="flex items-start gap-2">
-                        <span className="text-blue-500 font-bold">•</span>
-                        <span>Your token is now tradable on xExchange</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                        <span className="text-blue-500 font-bold">•</span>
-                        <span>Earn fees from every trade in your pool</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                        <span className="text-blue-500 font-bold">•</span>
-                        <span>
-                            Monitor your LP position and accumulated fees
-                        </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                        <span className="text-blue-500 font-bold">•</span>
-                        <span>
-                            Consider adding more liquidity to reduce slippage
-                        </span>
-                    </li>
-                </ul>
-            </div>
+            {/* What's Next */}
+            <CollapsibleCard
+                title="What's Next?"
+                icon="🚀"
+                variant="secondary"
+                defaultExpanded={true}
+            >
+                <div className="space-y-4">
+                    <p className="text-slate mb-4">
+                        Your liquidity pool is now active! Here's what you can
+                        do next:
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                        {[
+                            {
+                                icon: "💰",
+                                title: "Earn Trading Fees",
+                                desc: "Automatically earn fees from every trade in your pool",
+                            },
+                            {
+                                icon: "📊",
+                                title: "Monitor Performance",
+                                desc: "Track your LP position and accumulated rewards",
+                            },
+                            {
+                                icon: "🔄",
+                                title: "Add More Liquidity",
+                                desc: "Increase your position to earn more fees and reduce slippage",
+                            },
+                            {
+                                icon: "🎯",
+                                title: "Manage Position",
+                                desc: "Remove liquidity or adjust your position as needed",
+                            },
+                        ].map((item, index) => (
+                            <div
+                                key={index}
+                                className="flex items-start gap-3 p-3 bg-slate/5 rounded-lg"
+                            >
+                                <div className="w-8 h-8 bg-theme-blue/10 rounded-lg flex items-center justify-center text-lg flex-shrink-0">
+                                    {item.icon}
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-graphite text-sm mb-1">
+                                        {item.title}
+                                    </p>
+                                    <p className="text-slate text-sm leading-relaxed">
+                                        {item.desc}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </CollapsibleCard>
+
+            {/* Important Reminders */}
+            <CollapsibleCard
+                title="Important Reminders"
+                icon="💡"
+                variant="warning"
+                defaultExpanded={false}
+            >
+                <div className="space-y-3">
+                    {[
+                        {
+                            icon: "🔒",
+                            title: "Keep Your LP Tokens Safe",
+                            desc: "Your LP tokens represent ownership in the pool and are required to withdraw liquidity.",
+                        },
+                        {
+                            icon: "📈",
+                            title: "Monitor Impermanent Loss",
+                            desc: "Track price changes between your tokens to understand potential impermanent loss.",
+                        },
+                        {
+                            icon: "⚖️",
+                            title: "Understand the Risks",
+                            desc: "Liquidity provision involves risks including impermanent loss and smart contract risks.",
+                        },
+                    ].map((reminder, index) => (
+                        <div
+                            key={index}
+                            className="flex items-start gap-3 p-3 bg-distribute-primary/5 rounded-lg"
+                        >
+                            <div className="w-8 h-8 bg-distribute-primary/10 rounded-lg flex items-center justify-center text-lg flex-shrink-0">
+                                {reminder.icon}
+                            </div>
+                            <div>
+                                <p className="font-semibold text-distribute-primary text-sm mb-1">
+                                    {reminder.title}
+                                </p>
+                                <p className="text-slate text-sm leading-relaxed">
+                                    {reminder.desc}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </CollapsibleCard>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                     href="https://xexchange.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-3 bg-distribute-500 text-white rounded-xl font-medium hover:bg-distribute-600 transition-colors text-center"
+                    className="px-8 py-3 bg-gradient-to-r from-theme-blue to-theme-blue-dark text-white rounded-xl font-semibold hover:opacity-90 transition-all duration-200 shadow-level-2 hover:shadow-level-3 text-center"
                 >
                     View Pool on xExchange
                 </a>
                 <button
                     onClick={handleFinish}
-                    className="px-6 py-3 border border-distribute-500 text-distribute-600 rounded-xl font-medium hover:bg-distribute-50 transition-colors"
+                    className="px-8 py-3 border border-theme-blue text-theme-blue rounded-xl font-semibold hover:bg-theme-blue/5 transition-all duration-200"
                 >
                     Back to Dashboard
                 </button>
             </div>
 
-            {/* Educational Footer */}
-            <div className="bg-ash/10 rounded-xl p-4 max-w-md mx-auto">
-                <p className="text-xs text-slate">
-                    💡 <strong>Tip:</strong> Keep your LP tokens safe! They
-                    represent your ownership in the pool and are required to
-                    withdraw your liquidity later.
+            {/* Success Footer */}
+            <div className="text-center p-6 bg-emerald-green/5 rounded-xl border border-emerald-green/20">
+                <div className="flex items-center justify-center gap-3 mb-3">
+                    <div className="w-8 h-8 bg-emerald-green rounded-lg flex items-center justify-center text-white text-sm">
+                        ✓
+                    </div>
+                    <h3 className="font-semibold text-emerald-green">
+                        Congratulations!
+                    </h3>
+                </div>
+                <p className="text-slate text-sm">
+                    You've successfully created your first liquidity pool. Your
+                    token is now part of the DeFi ecosystem!
                 </p>
             </div>
         </div>

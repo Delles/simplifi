@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { LPData } from "../Introduction";
-import { InfoTooltip } from "../shared";
+import { InfoTooltip, CollapsibleCard } from "../shared";
 
 interface TransactionExecutionProps {
     lpData: LPData;
@@ -89,7 +89,7 @@ export const TransactionExecution: React.FC<TransactionExecutionProps> = ({
     if (!lpData.tokenA || !lpData.tokenB || !lpData.riskAcknowledged) {
         return (
             <div className="text-center space-y-6">
-                <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-500 rounded-3xl flex items-center justify-center text-4xl text-white mx-auto shadow-level-3">
+                <div className="w-20 h-20 bg-gradient-to-br from-distribute-primary to-distribute-secondary rounded-3xl flex items-center justify-center text-4xl text-white mx-auto shadow-level-3">
                     ⚠️
                 </div>
                 <h2 className="text-h2 font-bold text-graphite">
@@ -105,27 +105,14 @@ export const TransactionExecution: React.FC<TransactionExecutionProps> = ({
 
     return (
         <div className="space-y-8">
-            {/* Hero Section */}
+            {/* Hero Section - Simplified */}
             <div className="text-center">
-                <div className="relative mb-6">
-                    {/* Animated Background Glow */}
-                    <div className="absolute inset-0 w-20 h-20 mx-auto bg-gradient-to-br from-distribute-400/30 to-amber-400/30 rounded-full blur-lg animate-pulse-gentle"></div>
-
-                    {/* Main Icon */}
-                    <div className="relative w-20 h-20 bg-gradient-to-br from-distribute-500 to-amber-500 rounded-3xl flex items-center justify-center text-4xl text-white mx-auto shadow-level-3 animate-bounce-gentle">
-                        🚀
-                    </div>
-
-                    {/* Floating Particles */}
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-distribute-400 rounded-full animate-bounce opacity-60"></div>
-                    <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse opacity-40"></div>
+                <div className="w-16 h-16 bg-gradient-to-br from-theme-blue to-theme-blue-dark rounded-2xl flex items-center justify-center text-3xl text-white mx-auto mb-6 shadow-level-2">
+                    🚀
                 </div>
 
-                <h2 className="text-h2 font-bold text-graphite mb-4 tracking-tight">
-                    Execute{" "}
-                    <span className="text-distribute-600 font-extrabold">
-                        Transaction
-                    </span>
+                <h2 className="text-h2 font-bold text-theme-blue mb-4">
+                    Execute Transaction
                 </h2>
                 <div className="flex items-center justify-center gap-3 text-body-lg text-slate max-w-2xl mx-auto">
                     <span>
@@ -141,382 +128,350 @@ export const TransactionExecution: React.FC<TransactionExecutionProps> = ({
             </div>
 
             {/* Wallet Status */}
-            <div className="relative">
-                <div
-                    className={`absolute inset-0 rounded-3xl ${
-                        isWalletConnected
-                            ? "bg-gradient-to-r from-green-50 to-emerald-50"
-                            : "bg-gradient-to-r from-amber-50 to-yellow-50"
-                    }`}
-                ></div>
-
-                <div className="relative backdrop-blur-sm bg-white/90 rounded-3xl p-6 border border-gray-200/60 shadow-level-2">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div
-                                className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold shadow-level-2 ${
-                                    isWalletConnected
-                                        ? "bg-gradient-to-r from-green-500 to-emerald-600"
-                                        : "bg-gradient-to-r from-amber-500 to-yellow-600"
-                                }`}
-                            >
-                                {isWalletConnected ? "🔐" : "⚠️"}
-                            </div>
-                            <div>
-                                <h4
-                                    className={`font-bold ${
-                                        isWalletConnected
-                                            ? "text-green-800"
-                                            : "text-amber-800"
-                                    }`}
-                                >
-                                    {isWalletConnected
-                                        ? "Wallet Connected"
-                                        : "Wallet Required"}
-                                </h4>
-                                <p
-                                    className={`text-sm ${
-                                        isWalletConnected
-                                            ? "text-green-600"
-                                            : "text-amber-600"
-                                    }`}
-                                >
-                                    {isWalletConnected
-                                        ? "Ready to sign transactions"
-                                        : "Please connect your wallet to continue"}
-                                </p>
-                            </div>
-                        </div>
-
-                        {!isWalletConnected && (
-                            <button
-                                onClick={handleConnectWallet}
-                                className="px-6 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-xl font-medium hover:from-amber-600 hover:to-yellow-600 transition-all duration-200 shadow-level-2"
-                            >
-                                Connect Wallet
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Transaction Summary */}
-            <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl"></div>
-
-                <div className="relative backdrop-blur-sm bg-white/90 rounded-3xl p-8 border border-blue-200/60 shadow-level-2">
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center text-3xl text-white shadow-level-2">
-                            📋
+            <div
+                className={`border rounded-xl p-4 ${
+                    isWalletConnected
+                        ? "bg-emerald-green/5 border-emerald-green/20"
+                        : "bg-distribute-primary/5 border-distribute-primary/20"
+                }`}
+            >
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <div
+                            className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold shadow-level-1 ${
+                                isWalletConnected
+                                    ? "bg-gradient-to-r from-emerald-green to-emerald-600"
+                                    : "bg-gradient-to-r from-distribute-primary to-distribute-secondary"
+                            }`}
+                        >
+                            {isWalletConnected ? "🔐" : "⚠️"}
                         </div>
                         <div>
-                            <h3 className="text-h3 font-bold text-blue-800">
-                                Transaction Summary
-                            </h3>
-                            <p className="text-blue-600">
-                                Review what will be executed
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="grid gap-6 lg:grid-cols-2">
-                        {/* Pool Details */}
-                        <div className="space-y-4">
-                            <h4 className="font-bold text-blue-800 mb-3">
-                                Pool Details
-                            </h4>
-
-                            <div className="bg-blue-50 rounded-xl p-4 space-y-3">
-                                <div className="flex justify-between">
-                                    <span className="text-blue-600">
-                                        Pool Pair:
-                                    </span>
-                                    <span className="font-semibold text-blue-800">
-                                        {lpData.tokenA.ticker}/
-                                        {lpData.tokenB.ticker}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-blue-600">
-                                        Initial Price:
-                                    </span>
-                                    <span className="font-semibold text-blue-800">
-                                        1 {lpData.tokenA.ticker} ={" "}
-                                        {lpData.initialPrice}{" "}
-                                        {lpData.tokenB.ticker}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-blue-600">
-                                        LP Tokens:
-                                    </span>
-                                    <span className="font-semibold text-blue-800">
-                                        {lpData.estimatedLPTokens}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Token Amounts */}
-                        <div className="space-y-4">
-                            <h4 className="font-bold text-blue-800 mb-3">
-                                Token Amounts
-                            </h4>
-
-                            <div className="space-y-3">
-                                <div className="bg-blue-50 rounded-xl p-4">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                                            A
-                                        </div>
-                                        <span className="font-semibold text-blue-800">
-                                            {lpData.tokenA.ticker}
-                                        </span>
-                                    </div>
-                                    <p className="text-xl font-bold text-blue-800">
-                                        {lpData.tokenA.amount}
-                                    </p>
-                                </div>
-
-                                <div className="bg-green-50 rounded-xl p-4">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                                            B
-                                        </div>
-                                        <span className="font-semibold text-green-800">
-                                            {lpData.tokenB.ticker}
-                                        </span>
-                                    </div>
-                                    <p className="text-xl font-bold text-green-800">
-                                        {lpData.tokenB.amount}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Transaction Costs */}
-                    <div className="mt-6 bg-purple-50 rounded-xl p-4">
-                        <h4 className="font-bold text-purple-800 mb-3">
-                            Estimated Transaction Costs
-                        </h4>
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="flex justify-between">
-                                <span className="text-purple-600">
-                                    Gas Fee:
-                                </span>
-                                <span className="font-semibold text-purple-800">
-                                    ~{estimatedGasFee} EGLD
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-purple-600">
-                                    Pool Creation:
-                                </span>
-                                <span className="font-semibold text-purple-800">
-                                    Free
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Transaction Progress */}
-            {isLoading && (
-                <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-distribute-50 to-amber-50 rounded-3xl animate-pulse-gentle opacity-50"></div>
-
-                    <div className="relative backdrop-blur-md bg-white/95 rounded-3xl p-8 border border-distribute-200/60 shadow-level-3">
-                        <div className="text-center mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-r from-distribute-500 to-amber-500 rounded-full flex items-center justify-center text-4xl text-white mx-auto mb-4 shadow-level-3 animate-spin-slow">
-                                ⚡
-                            </div>
-                            <h3 className="text-h3 font-bold text-distribute-800 mb-2">
-                                Creating Liquidity Pool
-                            </h3>
-                            <p className="text-distribute-600">
-                                Please wait while your transaction is being
-                                processed...
-                            </p>
-                        </div>
-
-                        {/* Progress Steps */}
-                        <div className="space-y-4">
-                            {transactionSteps.map((step, index) => {
-                                const isActive = index + 1 === transactionStep;
-                                const isCompleted = index + 1 < transactionStep;
-
-                                return (
-                                    <div
-                                        key={step.id}
-                                        className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-500 ${
-                                            isActive
-                                                ? "bg-distribute-100 border border-distribute-300"
-                                                : isCompleted
-                                                ? "bg-green-50 border border-green-200"
-                                                : "bg-slate-50 border border-slate-200"
-                                        }`}
-                                        style={{
-                                            animationDelay: `${index * 200}ms`,
-                                        }}
-                                    >
-                                        <div
-                                            className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold transition-all duration-300 ${
-                                                isActive
-                                                    ? "bg-distribute-500 text-white animate-pulse"
-                                                    : isCompleted
-                                                    ? "bg-green-500 text-white"
-                                                    : "bg-slate-300 text-slate-600"
-                                            }`}
-                                        >
-                                            {isCompleted ? "✓" : step.icon}
-                                        </div>
-
-                                        <div className="flex-1">
-                                            <h4
-                                                className={`font-bold mb-1 ${
-                                                    isActive
-                                                        ? "text-distribute-800"
-                                                        : isCompleted
-                                                        ? "text-green-800"
-                                                        : "text-slate-600"
-                                                }`}
-                                            >
-                                                {step.title}
-                                            </h4>
-                                            <p
-                                                className={`text-sm ${
-                                                    isActive
-                                                        ? "text-distribute-600"
-                                                        : isCompleted
-                                                        ? "text-green-600"
-                                                        : "text-slate-500"
-                                                }`}
-                                            >
-                                                {step.description}
-                                            </p>
-                                        </div>
-
-                                        {isActive && (
-                                            <div className="w-6 h-6 border-2 border-distribute-300 border-t-distribute-600 rounded-full animate-spin"></div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Execute Button Section */}
-            {!isLoading && (
-                <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-50 via-emerald-100/50 to-green-50 rounded-3xl blur-sm"></div>
-
-                    <div className="relative backdrop-blur-md bg-white/95 rounded-3xl p-8 border border-white/50 shadow-level-3">
-                        <div className="text-center">
-                            <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-4xl text-white mx-auto mb-6 shadow-level-3 animate-bounce-gentle">
-                                🎯
-                            </div>
-
-                            <h3 className="text-h3 font-bold text-green-800 mb-4">
-                                Ready to Execute Transaction
-                            </h3>
-                            <p className="text-green-600 max-w-2xl mx-auto leading-relaxed mb-8">
-                                Everything is configured and ready. Click the
-                                button below to execute the transaction and
-                                create your liquidity pool.
-                            </p>
-
-                            <button
-                                onClick={onExecute}
-                                disabled={!isWalletConnected}
-                                className={`px-12 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-level-3 hover:shadow-level-4 transform hover:scale-105 ${
+                            <h4
+                                className={`font-bold ${
                                     isWalletConnected
-                                        ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600"
-                                        : "bg-slate-300 text-slate-500 cursor-not-allowed"
+                                        ? "text-emerald-green"
+                                        : "text-distribute-primary"
                                 }`}
                             >
                                 {isWalletConnected
-                                    ? "🚀 Execute Transaction"
-                                    : "🔐 Connect Wallet First"}
-                            </button>
-
-                            {isWalletConnected && (
-                                <p className="text-sm text-green-600 mt-4">
-                                    Your wallet will prompt you to confirm the
-                                    transaction
-                                </p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Important Notes */}
-            <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-3xl"></div>
-
-                <div className="relative backdrop-blur-sm bg-white/90 rounded-3xl p-8 border border-amber-200/60 shadow-level-2">
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-2xl flex items-center justify-center text-3xl text-white shadow-level-2">
-                            💡
-                        </div>
-                        <div>
-                            <h3 className="text-h3 font-bold text-amber-800">
-                                Before You Execute
-                            </h3>
-                            <p className="text-amber-600">
-                                Important reminders
+                                    ? "Wallet Connected"
+                                    : "Wallet Required"}
+                            </h4>
+                            <p className="text-sm text-slate">
+                                {isWalletConnected
+                                    ? "Ready to sign transactions"
+                                    : "Please connect your wallet to continue"}
                             </p>
                         </div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
-                        {[
-                            {
-                                icon: "🔐",
-                                title: "Wallet Security",
-                                note: "Only sign transactions from trusted sources. This transaction creates a liquidity pool on xExchange.",
-                            },
-                            {
-                                icon: "💰",
-                                title: "Gas Fees",
-                                note: "You'll pay network gas fees (~0.01 EGLD). The transaction will fail if you don't have enough EGLD.",
-                            },
-                            {
-                                icon: "⏰",
-                                title: "Processing Time",
-                                note: "Transaction typically takes 10-30 seconds to complete. Don't close this page while processing.",
-                            },
-                            {
-                                icon: "🔄",
-                                title: "Cannot Undo",
-                                note: "Once executed, the liquidity pool is created permanently. You can remove liquidity later but cannot delete the pool.",
-                            },
-                        ].map((item, index) => (
-                            <div
-                                key={index}
-                                className="flex items-start gap-3 p-4 bg-amber-50 rounded-xl"
-                                style={{ animationDelay: `${index * 100}ms` }}
-                            >
-                                <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-lg flex-shrink-0 mt-0.5">
-                                    {item.icon}
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-amber-800 mb-1 text-sm">
-                                        {item.title}
-                                    </h4>
-                                    <p className="text-amber-700 text-sm leading-relaxed">
-                                        {item.note}
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    {!isWalletConnected && (
+                        <button
+                            onClick={handleConnectWallet}
+                            className="px-6 py-2 bg-gradient-to-r from-distribute-primary to-distribute-secondary text-white rounded-xl font-medium hover:opacity-90 transition-all duration-200 shadow-level-1"
+                        >
+                            Connect Wallet
+                        </button>
+                    )}
                 </div>
             </div>
+
+            {/* Pool Summary */}
+            <CollapsibleCard
+                title="Pool Summary"
+                icon="📊"
+                variant="primary"
+                defaultExpanded={true}
+            >
+                <div className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {/* Token A */}
+                        <div className="space-y-3">
+                            <h4 className="font-semibold text-theme-blue">
+                                Token A
+                            </h4>
+                            <div className="bg-theme-blue/5 rounded-lg p-3">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-theme-blue to-theme-blue-dark rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                                        A
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-graphite">
+                                            {lpData.tokenA.name}
+                                        </p>
+                                        <p className="text-sm text-slate">
+                                            {lpData.tokenA.ticker}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-slate">
+                                    Amount:{" "}
+                                    <span className="font-medium text-graphite">
+                                        {lpData.tokenA.amount}{" "}
+                                        {lpData.tokenA.ticker}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Token B */}
+                        <div className="space-y-3">
+                            <h4 className="font-semibold text-emerald-green">
+                                Token B
+                            </h4>
+                            <div className="bg-emerald-green/5 rounded-lg p-3">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-green to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                                        B
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-graphite">
+                                            {lpData.tokenB.name}
+                                        </p>
+                                        <p className="text-sm text-slate">
+                                            {lpData.tokenB.ticker}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-slate">
+                                    Amount:{" "}
+                                    <span className="font-medium text-graphite">
+                                        {lpData.tokenB.amount}{" "}
+                                        {lpData.tokenB.ticker}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Pool Details */}
+                    <div className="grid md:grid-cols-3 gap-4 pt-4 border-t border-ash/20">
+                        <div className="text-center">
+                            <p className="text-sm text-slate mb-1">
+                                Initial Price
+                            </p>
+                            <p className="font-semibold text-graphite">
+                                {lpData.initialPrice} {lpData.tokenB?.ticker}
+                            </p>
+                            <p className="text-xs text-slate">
+                                per {lpData.tokenA?.ticker}
+                            </p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-sm text-slate mb-1">LP Tokens</p>
+                            <p className="font-semibold text-graphite">
+                                {lpData.estimatedLPTokens}
+                            </p>
+                            <p className="text-xs text-slate">estimated</p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-sm text-slate mb-1">Gas Fee</p>
+                            <p className="font-semibold text-graphite">
+                                {estimatedGasFee} EGLD
+                            </p>
+                            <p className="text-xs text-slate">estimated</p>
+                        </div>
+                    </div>
+                </div>
+            </CollapsibleCard>
+
+            {/* Transaction Progress */}
+            {isLoading && (
+                <CollapsibleCard
+                    title="Transaction Progress"
+                    icon="⏳"
+                    variant="warning"
+                    defaultExpanded={true}
+                >
+                    <div className="space-y-4">
+                        {transactionSteps.map((step, index) => {
+                            const isActive = index + 1 === transactionStep;
+                            const isCompleted = index + 1 < transactionStep;
+
+                            return (
+                                <div
+                                    key={step.id}
+                                    className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 ${
+                                        isActive
+                                            ? "bg-distribute-primary/10 border border-distribute-primary/20"
+                                            : isCompleted
+                                            ? "bg-emerald-green/10 border border-emerald-green/20"
+                                            : "bg-slate/5 border border-ash/20"
+                                    }`}
+                                >
+                                    <div
+                                        className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg transition-all duration-300 ${
+                                            isActive
+                                                ? "bg-distribute-primary text-white animate-pulse"
+                                                : isCompleted
+                                                ? "bg-emerald-green text-white"
+                                                : "bg-slate/20 text-slate"
+                                        }`}
+                                    >
+                                        {isCompleted ? "✓" : step.icon}
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4
+                                            className={`font-medium ${
+                                                isActive
+                                                    ? "text-distribute-primary"
+                                                    : isCompleted
+                                                    ? "text-emerald-green"
+                                                    : "text-slate"
+                                            }`}
+                                        >
+                                            {step.title}
+                                        </h4>
+                                        <p className="text-sm text-slate">
+                                            {step.description}
+                                        </p>
+                                    </div>
+                                    {isActive && (
+                                        <div className="w-6 h-6">
+                                            <div className="animate-spin rounded-full h-6 w-6 border-2 border-distribute-primary border-t-transparent"></div>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </CollapsibleCard>
+            )}
+
+            {/* Transaction Details */}
+            <CollapsibleCard
+                title="Transaction Details"
+                icon="📋"
+                variant="secondary"
+                defaultExpanded={false}
+            >
+                <div className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-3">
+                            <div className="flex justify-between">
+                                <span className="text-slate text-sm">
+                                    Network:
+                                </span>
+                                <span className="font-medium text-graphite text-sm">
+                                    MultiversX Mainnet
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-slate text-sm">
+                                    Contract:
+                                </span>
+                                <span className="font-mono text-xs text-slate">
+                                    xExchange Router
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-slate text-sm">
+                                    Function:
+                                </span>
+                                <span className="font-medium text-graphite text-sm">
+                                    createPair
+                                </span>
+                            </div>
+                        </div>
+                        <div className="space-y-3">
+                            <div className="flex justify-between">
+                                <span className="text-slate text-sm">
+                                    Gas Limit:
+                                </span>
+                                <span className="font-medium text-graphite text-sm">
+                                    60,000,000
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-slate text-sm">
+                                    Gas Price:
+                                </span>
+                                <span className="font-medium text-graphite text-sm">
+                                    1,000 wei
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-slate text-sm">
+                                    Estimated Fee:
+                                </span>
+                                <span className="font-medium text-graphite text-sm">
+                                    {estimatedGasFee} EGLD
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </CollapsibleCard>
+
+            {/* Important Notes */}
+            <CollapsibleCard
+                title="Important Notes"
+                icon="⚠️"
+                variant="warning"
+                defaultExpanded={false}
+            >
+                <div className="space-y-3">
+                    {[
+                        {
+                            icon: "🔒",
+                            title: "Irreversible Action",
+                            desc: "Once created, the liquidity pool cannot be undone. Make sure all parameters are correct.",
+                        },
+                        {
+                            icon: "💰",
+                            title: "Token Lock",
+                            desc: "Your tokens will be locked in the smart contract until you remove liquidity.",
+                        },
+                        {
+                            icon: "⏱️",
+                            title: "Processing Time",
+                            desc: "Transaction may take 1-2 minutes to complete depending on network congestion.",
+                        },
+                        {
+                            icon: "🔄",
+                            title: "Failed Transactions",
+                            desc: "If the transaction fails, gas fees are still consumed but no pool is created.",
+                        },
+                    ].map((note, index) => (
+                        <div
+                            key={index}
+                            className="flex items-start gap-3 p-3 bg-distribute-primary/5 rounded-lg"
+                        >
+                            <div className="w-8 h-8 bg-distribute-primary/10 rounded-lg flex items-center justify-center text-lg flex-shrink-0">
+                                {note.icon}
+                            </div>
+                            <div>
+                                <p className="font-semibold text-distribute-primary text-sm mb-1">
+                                    {note.title}
+                                </p>
+                                <p className="text-slate text-sm leading-relaxed">
+                                    {note.desc}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </CollapsibleCard>
+
+            {/* Execute Button */}
+            {!isLoading && (
+                <div className="text-center">
+                    <button
+                        onClick={onExecute}
+                        disabled={!isWalletConnected}
+                        className="px-8 py-4 bg-gradient-to-r from-theme-blue to-theme-blue-dark text-white rounded-xl font-semibold text-lg hover:opacity-90 disabled:bg-ash disabled:cursor-not-allowed transition-all duration-200 shadow-level-2 hover:shadow-level-3"
+                    >
+                        {isWalletConnected
+                            ? "Create Liquidity Pool"
+                            : "Connect Wallet First"}
+                    </button>
+                    <p className="text-sm text-slate mt-3">
+                        By clicking this button, you confirm that you understand
+                        the risks and agree to create the liquidity pool.
+                    </p>
+                </div>
+            )}
         </div>
     );
 };

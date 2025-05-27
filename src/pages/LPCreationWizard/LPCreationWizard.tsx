@@ -6,9 +6,9 @@ import {
     SelectToken,
     ChoosePairingToken,
     DefineLiquidity,
-    ReviewRisks,
     TransactionExecution,
     Confirmation,
+    RiskReviewModal,
     type LPData,
 } from "./components";
 
@@ -16,6 +16,7 @@ export const LPCreationWizard: React.FC = () => {
     const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+    const [isRiskModalOpen, setIsRiskModalOpen] = useState(false);
 
     // Results step state
     const [deploymentResult, setDeploymentResult] = useState<{
@@ -32,32 +33,27 @@ export const LPCreationWizard: React.FC = () => {
         riskAcknowledged: false,
     });
 
-    // LP Creation wizard steps
+    // LP Creation wizard steps (removed ReviewRisks step - now handled by modal)
     const steps = [
         {
-            title: "Introduction",
+            title: "Intro",
             description: "Learn About LPs",
             educationalNote: "Understand liquidity pools and risks",
         },
         {
-            title: "Select Token",
+            title: "Token A",
             description: "Choose Token A",
             educationalNote: "Pick your token for the pool",
         },
         {
-            title: "Pairing Token",
+            title: "Token B",
             description: "Choose Token B",
             educationalNote: "Select pairing token (EGLD/USDC)",
         },
         {
-            title: "Define Liquidity",
+            title: "Amounts",
             description: "Set Amounts",
             educationalNote: "Input token amounts and price",
-        },
-        {
-            title: "Review Risks",
-            description: "Confirm Details",
-            educationalNote: "Final review and risk acknowledgment",
         },
         {
             title: "Execute",
@@ -65,7 +61,7 @@ export const LPCreationWizard: React.FC = () => {
             educationalNote: "Sign transaction",
         },
         {
-            title: "Success",
+            title: "Done",
             description: "Pool Created!",
             educationalNote: "Your LP is ready",
         },
@@ -79,7 +75,7 @@ export const LPCreationWizard: React.FC = () => {
     };
 
     const handleNext = async () => {
-        if (currentStep < 6) {
+        if (currentStep < 5) {
             setIsLoading(true);
             // Simulate validation/processing time for better UX
             await new Promise((resolve) => setTimeout(resolve, 300));
@@ -133,14 +129,14 @@ export const LPCreationWizard: React.FC = () => {
             }
 
             // Move to results step
-            setCurrentStep(7);
+            setCurrentStep(6);
         } catch (error) {
             console.error("LP creation failed:", error);
             setDeploymentResult({
                 isSuccess: false,
                 errorMessage: "An unexpected error occurred. Please try again.",
             });
-            setCurrentStep(7);
+            setCurrentStep(6);
         } finally {
             setIsLoading(false);
         }
@@ -157,6 +153,11 @@ export const LPCreationWizard: React.FC = () => {
         });
         setDeploymentResult(null);
         setCurrentStep(1);
+    };
+
+    const handleRiskModalConfirm = () => {
+        setLpData((prev) => ({ ...prev, riskAcknowledged: true }));
+        setIsRiskModalOpen(false);
     };
 
     const renderCurrentStep = () => {
@@ -187,16 +188,10 @@ export const LPCreationWizard: React.FC = () => {
                     <DefineLiquidity
                         lpData={lpData}
                         onInputChange={handleInputChange}
+                        onOpenRiskModal={() => setIsRiskModalOpen(true)}
                     />
                 );
             case 5:
-                return (
-                    <ReviewRisks
-                        lpData={lpData}
-                        onInputChange={handleInputChange}
-                    />
-                );
-            case 6:
                 return (
                     <TransactionExecution
                         lpData={lpData}
@@ -204,7 +199,7 @@ export const LPCreationWizard: React.FC = () => {
                         isLoading={isLoading}
                     />
                 );
-            case 7:
+            case 6:
                 return deploymentResult ? (
                     <Confirmation
                         lpData={lpData}
@@ -243,25 +238,24 @@ export const LPCreationWizard: React.FC = () => {
                 };
             case 4:
                 return {
-                    isValid: !!(lpData.tokenA?.amount && lpData.tokenB?.amount),
+                    isValid: !!(
+                        lpData.tokenA?.amount &&
+                        lpData.tokenB?.amount &&
+                        lpData.riskAcknowledged
+                    ),
                     missing: [
                         ...(lpData.tokenA?.amount ? [] : ["Token A amount"]),
                         ...(lpData.tokenB?.amount ? [] : ["Token B amount"]),
+                        ...(lpData.riskAcknowledged
+                            ? []
+                            : ["Risk acknowledgment"]),
                     ],
                     message:
-                        lpData.tokenA?.amount && lpData.tokenB?.amount
-                            ? "Liquidity amounts set"
-                            : "Please set token amounts",
-                };
-            case 5:
-                return {
-                    isValid: lpData.riskAcknowledged,
-                    missing: lpData.riskAcknowledged
-                        ? []
-                        : ["Risk acknowledgment"],
-                    message: lpData.riskAcknowledged
-                        ? "Ready to create pool"
-                        : "Please acknowledge the risks",
+                        lpData.tokenA?.amount &&
+                        lpData.tokenB?.amount &&
+                        lpData.riskAcknowledged
+                            ? "Ready to create pool"
+                            : "Please complete all requirements",
                 };
             default:
                 return {
@@ -276,9 +270,9 @@ export const LPCreationWizard: React.FC = () => {
         switch (currentStep) {
             case 1:
                 return "Start LP Creation";
-            case 5:
+            case 4:
                 return "Create Liquidity Pool";
-            case 6:
+            case 5:
                 return isLoading ? "Creating Pool..." : "Execute Transaction";
             default:
                 return "Continue";
@@ -295,7 +289,7 @@ export const LPCreationWizard: React.FC = () => {
             <div className="max-w-4xl mx-auto px-6 py-8">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-graphite mb-4">
+                    <h1 className="text-4xl font-bold text-theme-blue mb-4">
                         Create Liquidity Pool
                     </h1>
                     <p className="text-lg text-slate max-w-2xl mx-auto">
@@ -312,7 +306,7 @@ export const LPCreationWizard: React.FC = () => {
                         totalSteps={steps.length}
                         steps={steps}
                         validation={
-                            currentStep < 7 ? getStepValidation() : undefined
+                            currentStep < 6 ? getStepValidation() : undefined
                         }
                     />
 
@@ -320,7 +314,7 @@ export const LPCreationWizard: React.FC = () => {
                     <div className="mt-8">{renderCurrentStep()}</div>
 
                     {/* Navigation */}
-                    {currentStep < 7 && (
+                    {currentStep < 6 && (
                         <div className="flex justify-between items-center mt-8 pt-6 border-t border-ash">
                             <button
                                 onClick={handleBack}
@@ -338,11 +332,11 @@ export const LPCreationWizard: React.FC = () => {
                                     Cancel
                                 </button>
 
-                                {currentStep === 6 ? (
+                                {currentStep === 5 ? (
                                     <button
                                         onClick={handleExecute}
                                         disabled={!canProceed()}
-                                        className="px-8 py-3 bg-distribute-500 text-white rounded-xl font-medium hover:bg-distribute-600 disabled:bg-ash disabled:cursor-not-allowed transition-colors"
+                                        className="px-8 py-3 bg-theme-blue text-white rounded-xl font-medium hover:bg-theme-blue-dark disabled:bg-ash disabled:cursor-not-allowed transition-colors"
                                     >
                                         {getNextButtonText()}
                                     </button>
@@ -350,7 +344,7 @@ export const LPCreationWizard: React.FC = () => {
                                     <button
                                         onClick={handleNext}
                                         disabled={!canProceed()}
-                                        className="px-8 py-3 bg-distribute-500 text-white rounded-xl font-medium hover:bg-distribute-600 disabled:bg-ash disabled:cursor-not-allowed transition-colors"
+                                        className="px-8 py-3 bg-theme-blue text-white rounded-xl font-medium hover:bg-theme-blue-dark disabled:bg-ash disabled:cursor-not-allowed transition-colors"
                                     >
                                         {getNextButtonText()}
                                     </button>
@@ -359,6 +353,14 @@ export const LPCreationWizard: React.FC = () => {
                         </div>
                     )}
                 </div>
+
+                {/* Risk Review Modal */}
+                <RiskReviewModal
+                    isOpen={isRiskModalOpen}
+                    onClose={() => setIsRiskModalOpen(false)}
+                    onConfirm={handleRiskModalConfirm}
+                    lpData={lpData}
+                />
             </div>
         </div>
     );
